@@ -1,29 +1,10 @@
 import archive2022 from '../config/archive2022.json'
 import archiveEuro2024 from '../config/archiveEuro2024.json'
 
-// Pravidla sázek
+// Pravidla sázek (sázka je vždy za zápas)
 const RULES = {
-  'MS 2022': { groupBet: 10, koDailyBet: 40, winnerBet: 100 },
-  'Euro 2024': { groupBet: 20, koDailyBet: 40, winnerBet: 100 },
-}
-
-// Počet hracích dnů pro každou fázi (pro výpočet vkladu)
-// MS 2022: osmifinále 4 dny, čtvrtfinále 2, semifinále 2, o 3. místo 1, finále 1 = 10 dnů
-// Euro 2024: osmifinále 4 dny, čtvrtfinále 2, semifinále 2, finále 1 = 9 dnů
-const STAGE_DAYS = {
-  'MS 2022': {
-    'Osmifinále': 4,
-    'Čtvrtfinále': 2,
-    'Semifinále': 2,
-    'O 3. místo': 1,
-    'Finále': 1,
-  },
-  'Euro 2024': {
-    'Osmifinále': 4,
-    'Čtvrtfinále': 2,
-    'Semifinále': 2,
-    'Finále': 1,
-  },
+  'MS 2022': { groupBet: 10, koMatchBet: 40, winnerBet: 100 },
+  'Euro 2024': { groupBet: 20, koMatchBet: 40, winnerBet: 100 },
 }
 
 export function renderArchive(container) {
@@ -114,31 +95,30 @@ function renderTournament(content, data, title) {
   })).sort((a, b) => b.total - a.total)
 
   // Tabulka 2: KEŠ (výhry - vklady)
+  // POZN.: Sloupec "Součet peněz" v Excelu listu Vyřazovací fáze obsahuje
+  // celkový součet (skupiny + vyřazovačka), takže koTotals.money už zahrnuje gWin.
   const cashTable = players.map(p => {
     const gWin = (data.groupTotals[p] || {}).money || 0
-    const kWin = (data.koTotals[p] || {}).money || 0
+    const kTotalFromExcel = (data.koTotals[p] || {}).money || 0
+    const koOnlyWin = Math.max(0, kTotalFromExcel - gWin) // čistá výhra z KO
+
     const gDeposit = groupMatchCounts[p] * rules.groupBet
-    const kDeposit = koMatchCounts[p] * rules.groupBet // ve vyřazovačce se platilo 40/den, ale zjednodušíme na per-zápas stejnou sazbu
-    // Reálně: ve vyřazovačce 40 Kč/den. Spočítej hrací dny kde hráč tipoval.
-    // Pro každou fázi co hráč tipoval, započítej skutečný počet dnů
-    const koTipStages = new Set()
-    data.koMatches.forEach(m => {
-      if (m.tips[p]) koTipStages.add(m.stage)
-    })
-    const stageDays = STAGE_DAYS[title] || {}
-    const koTipDaysCount = [...koTipStages].reduce((sum, stage) => sum + (stageDays[stage] || 1), 0)
-    const kDepositReal = koTipDaysCount * rules.koDailyBet
+    const kDeposit = koMatchCounts[p] * rules.koMatchBet // 40 Kč za zápas
     const winnerDeposit = data.winnerBets[p] ? rules.winnerBet : 0
-    const totalDeposit = gDeposit + kDepositReal + winnerDeposit
-    const totalWin = gWin + kWin + (data.winnerBets[p]?.trim() === data.actualWinner ? rules.winnerBet * players.length : 0)
+    const totalDeposit = gDeposit + kDeposit + winnerDeposit
+
+    const winnerBonus = data.winnerBets[p]?.trim() === data.actualWinner
+      ? rules.winnerBet * players.length
+      : 0
+    const totalWin = kTotalFromExcel + winnerBonus
     const profit = totalWin - totalDeposit
 
     return {
       name: p,
       groupWin: gWin,
-      koWin: kWin,
+      koWin: koOnlyWin,
       groupDeposit: gDeposit,
-      koDeposit: kDepositReal,
+      koDeposit: kDeposit,
       winnerDeposit,
       totalWin,
       totalDeposit,
@@ -149,8 +129,7 @@ function renderTournament(content, data, title) {
   // Zkontroluj jestli někdo trefil vítěze
   const anyoneGotWinner = players.some(p => data.winnerBets[p]?.trim() === data.actualWinner)
 
-  // Spočítej dny vyřazovačky pro popis
-  const totalKoDays = Object.values(STAGE_DAYS[title] || {}).reduce((a, b) => a + b, 0)
+  const totalKoMatches = data.koMatches.length
 
   content.innerHTML = `
     <div class="archive-header">
@@ -165,24 +144,22 @@ function renderTournament(content, data, title) {
     <details class="archive-rules">
       <summary>Pravidla a výpočet sázek</summary>
       <div class="archive-rules-content">
-        <p><strong>Sázky:</strong></p>
+        <p><strong>Sázky (vždy za zápas):</strong></p>
         <ul>
           <li>Základní skupiny: <strong>${rules.groupBet} Kč</strong> za zápas (${data.groupMatches.length} zápasů → max <strong>${data.groupMatches.length * rules.groupBet} Kč</strong>)</li>
-          <li>Vyřazovací fáze: <strong>${rules.koDailyBet} Kč</strong> za hrací den (${totalKoDays} dnů → max <strong>${totalKoDays * rules.koDailyBet} Kč</strong>)</li>
+          <li>Vyřazovací fáze: <strong>${rules.koMatchBet} Kč</strong> za zápas (${totalKoMatches} zápasů → max <strong>${totalKoMatches * rules.koMatchBet} Kč</strong>)</li>
           <li>Tip na celkového vítěze: <strong>${rules.winnerBet} Kč</strong></li>
         </ul>
-        <p><strong>Maximální vklad na hráče:</strong> ${data.groupMatches.length * rules.groupBet + totalKoDays * rules.koDailyBet + rules.winnerBet} Kč</p>
+        <p><strong>Maximální vklad na hráče:</strong> ${data.groupMatches.length * rules.groupBet + totalKoMatches * rules.koMatchBet + rules.winnerBet} Kč</p>
         <p><strong>Jak se vyhrává:</strong></p>
         <ul>
-          <li>Peníze se hází do banku — vyhrává hráč, který tipne přesný výsledek zápasu</li>
-          <li>Pokud nikdo netrefí výsledek, bank přechází do dalšího zápasu</li>
-          <li>Pokud trefí výsledek víc hráčů, bank se mezi ně dělí</li>
+          <li>Bank zápasu = ${players.length} hráčů × sázka (${rules.groupBet} Kč ve skupinách / ${rules.koMatchBet} Kč v KO)</li>
+          <li>Vyhrává hráč, který tipne přesný výsledek zápasu — bere celý bank</li>
+          <li>Pokud trefí víc hráčů, bank se mezi ně rovnoměrně dělí</li>
+          <li>Pokud nikdo netrefí, bank přechází do dalšího zápasu (kumuluje se)</li>
+          <li>Bank z neúspěšných tipů ve skupinách se na konci přenese do vyřazovací fáze</li>
           <li>Při správném tipu na vítěze turnaje vyhrává hráč ${rules.winnerBet} Kč × počet hráčů</li>
         </ul>
-        <p style="color: var(--color-text-dim); font-size: 12px;">
-          Vklad za vyřazovačku se počítá za hrací dny, ne za jednotlivé zápasy:
-          ${Object.entries(STAGE_DAYS[title] || {}).map(([s, d]) => `${s} ${d}d`).join(', ')}
-        </p>
       </div>
     </details>
 
@@ -252,9 +229,31 @@ function renderTournament(content, data, title) {
                 </td>
               </tr>
             `).join('')}
+            ${(() => {
+              const sumGroupWin = cashTable.reduce((s, p) => s + p.groupWin, 0)
+              const sumKoWin = cashTable.reduce((s, p) => s + p.koWin, 0)
+              const sumDep = cashTable.reduce((s, p) => s + p.totalDeposit, 0)
+              const sumWin = cashTable.reduce((s, p) => s + p.totalWin, 0)
+              const sumProfit = sumWin - sumDep
+              return `
+                <tr style="border-top: 2px solid var(--color-border); font-weight: 700;">
+                  <td colspan="2" style="text-align: right; color: var(--color-text-dim);">Σ celkem</td>
+                  <td style="color: var(--color-gold);">${sumGroupWin} Kč</td>
+                  <td style="color: var(--color-gold);">${sumKoWin} Kč</td>
+                  <td style="color: var(--color-text-dim);">${sumDep} Kč</td>
+                  <td style="color: var(--color-gold);">${sumWin} Kč</td>
+                  <td style="color: ${sumProfit >= 0 ? 'var(--color-open)' : 'var(--color-locked)'};">
+                    ${sumProfit > 0 ? '+' : ''}${sumProfit} Kč
+                  </td>
+                </tr>
+              `
+            })()}
           </tbody>
         </table>
       </div>
+      <p style="color: var(--color-text-dim); font-size: 12px; margin-top: 8px;">
+        Pozn.: Bank z neúspěšných tipů ve skupinách přechází do vyřazovací fáze, takže celkové výhry mohou převyšovat vlastní vklady hráčů.
+      </p>
     </div>
 
     <!-- ZÁPASY -->
