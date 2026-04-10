@@ -31,15 +31,6 @@ export function renderRules(container) {
       </div>
 
       <div class="rules-card">
-        <h2>🏦 Bank zápasu</h2>
-        <ul>
-          <li>Bank skupinového zápasu: <strong>${playerCount} hráčů × ${RULES_2026.groupBet} Kč = ${groupBank} Kč</strong></li>
-          <li>Bank KO zápasu: <strong>${playerCount} hráčů × ${RULES_2026.koMatchBet} Kč = ${koBank} Kč</strong></li>
-        </ul>
-        <p class="rules-note">Hráč přispívá do banku jen za zápasy, které stihl tipnout před deadline.</p>
-      </div>
-
-      <div class="rules-card">
         <h2>🏆 Jak se vyhrává</h2>
         <ul>
           <li>Vyhrává hráč, který tipne <strong>přesný výsledek</strong> zápasu — bere celý bank.</li>
@@ -83,7 +74,6 @@ export function renderRules(container) {
             <td><strong style="color: var(--color-gold);">${totalMaxDeposit} Kč</strong></td>
           </tr>
         </table>
-        <p class="rules-note">Skutečný vklad bude nižší — platí se jen za zápasy, které hráč skutečně tipnul.</p>
       </div>
 
       <div class="rules-card">

@@ -3,49 +3,101 @@ import { getPlayerName } from '../services/auth.js'
 export function renderNav() {
   const player = getPlayerName()
   return `
-    <nav>
+    <nav role="navigation" aria-label="Hlavní navigace">
       <a href="#/" class="nav-brand">
         <span class="nav-title">Pískové doly<span class="nav-subtitle">Tipovačka MS 2026</span></span>
       </a>
-      <div class="nav-links">
-        <a href="#/">Tipovačka</a>
-        <a href="#/standings">Žebříček</a>
-        <a href="#/winner">Vítěz</a>
-        <a href="#/schedule">Rozpis</a>
-        <a href="#/rules">Pravidla</a>
-        <a href="#/archive">Archiv</a>
-        <a href="#/admin">Admin</a>
-      </div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#/">Tipovačka</a></li>
+        <li><a href="#/standings">Žebříček</a></li>
+        <li><a href="#/winner">Vítěz</a></li>
+        <li><a href="#/schedule">Rozpis</a></li>
+        <li><a href="#/rules">Pravidla</a></li>
+        <li><a href="#/archive">Archiv</a></li>
+        <li><a href="#/admin">Admin</a></li>
+      </ul>
       <div class="nav-player" id="nav-player">
         ${player
           ? `<span class="player-badge">${player}</span>`
           : `<button class="btn-select-player" id="btn-select-player">Vyber hráče</button>`
         }
       </div>
-      <button class="nav-burger" id="nav-burger" aria-label="Menu">☰</button>
+      <button class="nav-hamburger" id="navHamburger"
+              aria-label="Otevřít menu" aria-expanded="false" aria-controls="navLinks">
+        <span></span><span></span><span></span>
+      </button>
     </nav>
   `
 }
 
 export function initNavEvents() {
-  const burger = document.getElementById('nav-burger')
-  if (burger) {
-    burger.addEventListener('click', () => {
-      document.querySelector('.nav-links').classList.toggle('open')
+  const navHamburger = document.getElementById('navHamburger')
+  const navLinks = document.getElementById('navLinks')
+
+  function closeMenu() {
+    if (!navLinks) return
+    navLinks.classList.remove('open')
+    if (navHamburger) {
+      navHamburger.setAttribute('aria-expanded', 'false')
+      navHamburger.setAttribute('aria-label', 'Otevřít menu')
+    }
+    document.body.style.overflow = ''
+  }
+
+  function toggleMenu() {
+    if (!navLinks) return
+    const isOpen = navLinks.classList.toggle('open')
+    if (navHamburger) {
+      navHamburger.setAttribute('aria-expanded', String(isOpen))
+      navHamburger.setAttribute('aria-label', isOpen ? 'Zavřít menu' : 'Otevřít menu')
+    }
+    document.body.style.overflow = isOpen ? 'hidden' : ''
+  }
+
+  if (navHamburger) {
+    navHamburger.addEventListener('click', toggleMenu)
+  }
+
+  // Zavři menu po kliknutí na odkaz
+  if (navLinks) {
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', closeMenu)
     })
   }
 
+  // Esc zavře menu
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navLinks?.classList.contains('open')) {
+      closeMenu()
+      navHamburger?.focus()
+    }
+  })
+
+  // Click outside zavře menu
+  document.addEventListener('click', (e) => {
+    if (navLinks?.classList.contains('open')) {
+      if (!e.target.closest('nav') && !e.target.closest('.nav-hamburger')) {
+        closeMenu()
+      }
+    }
+  })
+
+  // Resize zavře menu pokud se zvětší okno
+  let resizeTimer
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer)
+    resizeTimer = setTimeout(() => {
+      if (window.innerWidth > 768 && navLinks?.classList.contains('open')) {
+        closeMenu()
+      }
+    }, 150)
+  })
+
+  // Player select button
   const selectBtn = document.getElementById('btn-select-player')
   if (selectBtn) {
     selectBtn.addEventListener('click', () => {
       document.getElementById('player-modal').classList.add('visible')
     })
   }
-
-  // Zavři menu po kliknutí na odkaz
-  document.querySelectorAll('.nav-links a').forEach(a => {
-    a.addEventListener('click', () => {
-      document.querySelector('.nav-links').classList.remove('open')
-    })
-  })
 }
