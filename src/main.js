@@ -8,6 +8,8 @@ import { renderStandings } from './views/standings.js'
 import { renderMatchDetail } from './views/matchDetail.js'
 import { renderArchive } from './views/archive.js'
 import { renderAdmin } from './views/admin.js'
+import { renderRules } from './views/rules.js'
+import { renderWinner } from './views/winner.js'
 
 // Registrace rout
 route('/', renderDashboard)
@@ -16,6 +18,8 @@ route('/standings', renderStandings)
 route('/match/:id', renderMatchDetail)
 route('/archive', renderArchive)
 route('/admin', renderAdmin)
+route('/rules', renderRules)
+route('/winner', renderWinner)
 
 // Render app shell
 const app = document.getElementById('app')

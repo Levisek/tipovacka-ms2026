@@ -10,7 +10,9 @@ export function renderNav() {
       <div class="nav-links">
         <a href="#/">Tipovačka</a>
         <a href="#/standings">Žebříček</a>
+        <a href="#/winner">Vítěz</a>
         <a href="#/schedule">Rozpis</a>
+        <a href="#/rules">Pravidla</a>
         <a href="#/archive">Archiv</a>
         <a href="#/admin">Admin</a>
       </div>
