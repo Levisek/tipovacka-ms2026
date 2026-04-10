@@ -7,6 +7,7 @@ import { getPlayerName } from '../services/auth.js'
 import { formatDateFull, getDeadlineTime, isPastDeadline } from '../utils/date.js'
 import { getPlayerBet, getAllBets, getWinnerBets } from '../services/betService.js'
 import { computeLiveStandings } from '../services/standingsService.js'
+import { startCountdown } from '../components/countdown.js'
 
 // Cache tipů (přežije mezi renders)
 const _betCache = {}
@@ -77,6 +78,16 @@ export function renderDashboard(container) {
       <h1>Tipovačka</h1>
     </div>
     ${renderBankTicker(_currentBank)}
+    ${currentDay && !isPastDeadline(currentDay) ? `
+      <div class="deadline-banner">
+        <span class="deadline-banner-icon">⏱</span>
+        <div class="deadline-banner-text">
+          <div class="deadline-banner-label">Tipy lze podávat do</div>
+          <div class="deadline-banner-time" id="deadline-countdown">…</div>
+          <div class="deadline-banner-day">${currentDay === today ? 'Dnes' : formatDateFull(currentDay)} · deadline ${getDeadlineTime(currentDay)}</div>
+        </div>
+      </div>
+    ` : ''}
     ${renderWinnerBet(_winnerBets[player] || null, _winnerBets)}
     <div class="phase-tabs">
       <button class="phase-tab ${phase === 'group' ? 'active' : ''}" data-phase="group">
@@ -175,6 +186,13 @@ export function renderDashboard(container) {
     })
   }
 
+  // Spusť countdown pro aktuální den (pokud existuje a deadline ještě neuplynul)
+  let countdownCleanup = null
+  if (currentDay && !isPastDeadline(currentDay)) {
+    const el = container.querySelector('#deadline-countdown')
+    if (el) countdownCleanup = startCountdown(currentDay, el)
+  }
+
   // Init tip na vítěze
   if (player) {
     initWinnerBet(container, () => loadWinnerBetsAndRerender(container))
@@ -189,7 +207,10 @@ export function renderDashboard(container) {
 
   // Auto-update
   const unsubscribe = store.onChange(() => renderDashboard(container))
-  return () => unsubscribe()
+  return () => {
+    unsubscribe()
+    if (countdownCleanup) countdownCleanup()
+  }
 }
 
 let _bankLoadInProgress = false

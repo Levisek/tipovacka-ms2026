@@ -482,6 +482,75 @@ h3 { font-size: 16px; font-weight: 500; }
 .badge-live { background: var(--color-live-bg); color: var(--color-live); }
 .badge-finished { background: var(--color-gold-dim); color: var(--color-gold); }
 
+/* ===== DEADLINE BANNER ===== */
+.deadline-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, rgba(0, 154, 68, 0.10), rgba(0, 163, 224, 0.06));
+  border: 2px solid var(--wc-green);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0, 154, 68, 0.12);
+}
+
+.deadline-banner-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.deadline-banner-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.deadline-banner-label {
+  font-size: 11px;
+  color: var(--color-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.deadline-banner-time {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--wc-green);
+  line-height: 1.1;
+}
+
+.deadline-banner-time.urgent {
+  color: var(--wc-orange);
+  animation: pulse 1.5s infinite;
+}
+
+.deadline-banner-time.locked {
+  color: var(--color-locked);
+}
+
+.deadline-banner-day {
+  font-size: 12px;
+  color: var(--color-text-dim);
+  margin-top: 2px;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@media (max-width: 600px) {
+  .deadline-banner {
+    padding: 12px 16px;
+    gap: 12px;
+  }
+  .deadline-banner-icon { font-size: 24px; }
+  .deadline-banner-time { font-size: 22px; }
+}
+
 /* ===== WINNER BET ===== */
 .winner-bet {
   margin-bottom: 24px;
