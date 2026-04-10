@@ -21,7 +21,7 @@ export async function renderStandings(container) {
     return
   }
 
-  const { standings, currentBank, totalDeposit, totalWon, actualWinner, tournamentFinished } = result
+  const { standings, currentBank, totalDeposit, totalWon, actualWinner, tournamentFinished, winnerBets, winnerBank, eliminations } = result
   const podium = standings.slice(0, 3)
   const anyTipsYet = standings.some(p => p.correctTips > 0 || p.deposit > 0)
 
@@ -37,6 +37,8 @@ export async function renderStandings(container) {
       <div class="bank-hero-amount">${formatKc(currentBank)}</div>
       <div class="bank-hero-sub">čeká na příští správný tip</div>
     </div>
+
+    ${renderWinnerSection(winnerBank, winnerBets, eliminations, actualWinner, tournamentFinished)}
 
     <div class="standings-summary">
       <div class="standings-summary-item">
@@ -135,6 +137,56 @@ export async function renderStandings(container) {
   // Auto-update při změně výsledků
   const unsubscribe = store.onChange(() => renderStandings(container))
   return () => unsubscribe()
+}
+
+function renderWinnerSection(winnerBank, winnerBets, eliminations, actualWinner, tournamentFinished) {
+  const entries = Object.entries(winnerBets || {})
+  return `
+    <div class="winner-section">
+      <div class="winner-section-header">
+        <span class="winner-section-icon">🏆</span>
+        <div class="winner-section-title-group">
+          <h2>Tip na vítěze turnaje</h2>
+          <span class="winner-section-sub">samostatný bank · 700 Kč carry-over z Eura 2024 + 100 Kč/hráč</span>
+        </div>
+        <div class="winner-section-bank">
+          ${Math.round(winnerBank)} Kč
+        </div>
+      </div>
+      ${entries.length > 0 ? `
+        <table class="winner-section-table">
+          <thead>
+            <tr>
+              <th>Hráč</th>
+              <th>Tipovaný tým</th>
+              <th>Stav</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${entries.map(([player, team]) => {
+              const isCorrect = tournamentFinished && team === actualWinner
+              const isEliminated = eliminations[team] === 'eliminated'
+              let statusHtml
+              if (isCorrect) {
+                statusHtml = '<span class="winner-status correct">🏆 Vítěz!</span>'
+              } else if (isEliminated) {
+                statusHtml = '<span class="winner-status out">❌ Vypadl</span>'
+              } else {
+                statusHtml = '<span class="winner-status in">✓ Ve hře</span>'
+              }
+              return `
+                <tr class="${isEliminated ? 'eliminated' : ''}">
+                  <td><strong>${player}</strong></td>
+                  <td>${team}</td>
+                  <td>${statusHtml}</td>
+                </tr>
+              `
+            }).join('')}
+          </tbody>
+        </table>
+      ` : '<p style="color: var(--color-text-dim); text-align: center; padding: 16px;">Zatím nikdo netipnul vítěze.</p>'}
+    </div>
+  `
 }
 
 function renderPodiumCard(player, rank) {

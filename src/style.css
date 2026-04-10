@@ -1214,6 +1214,104 @@ h3 { font-size: 16px; font-weight: 500; }
   .bank-hero-amount { font-size: 42px; }
 }
 
+/* ===== WINNER SECTION (žebříček) ===== */
+.winner-section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-gold);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+
+.winner-section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.winner-section-icon { font-size: 28px; }
+
+.winner-section-title-group {
+  flex: 1;
+  min-width: 180px;
+}
+
+.winner-section-title-group h2 {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text);
+  margin: 0 0 2px 0;
+}
+
+.winner-section-sub {
+  font-size: 11px;
+  color: var(--color-text-dim);
+}
+
+.winner-section-bank {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-gold);
+  background: var(--color-gold-dim);
+  padding: 8px 16px;
+  border-radius: var(--radius);
+}
+
+.winner-section-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.winner-section-table th {
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: var(--color-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 600;
+}
+
+.winner-section-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.winner-section-table tr:last-child td { border-bottom: none; }
+
+.winner-section-table tr.eliminated td {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.winner-section-table tr.eliminated td:last-child {
+  text-decoration: none;
+}
+
+.winner-status {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.winner-status.in { color: var(--color-open); }
+.winner-status.out { color: var(--color-locked); }
+.winner-status.correct { color: var(--color-gold); }
+
+@media (max-width: 600px) {
+  .winner-section { padding: 14px; }
+  .winner-section-bank { font-size: 22px; padding: 6px 12px; }
+  .winner-section-title-group h2 { font-size: 15px; }
+}
+
 /* ===== STANDINGS SUMMARY ===== */
 .standings-summary {
   display: grid;
