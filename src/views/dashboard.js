@@ -83,8 +83,8 @@ export function renderDashboard(container) {
         <span class="deadline-banner-icon">⏱</span>
         <div class="deadline-banner-text">
           <div class="deadline-banner-label">Tipy lze podávat do</div>
-          <div class="deadline-banner-time" id="deadline-countdown">…</div>
-          <div class="deadline-banner-day">${currentDay === today ? 'Dnes' : formatDateFull(currentDay)} · deadline ${getDeadlineTime(currentDay)}</div>
+          <div class="deadline-banner-time">${currentDay === today ? 'Dnes' : formatDateFull(currentDay)} · ${getDeadlineTime(currentDay)}</div>
+          <div class="deadline-banner-day" id="deadline-countdown">…</div>
         </div>
       </div>
     ` : ''}
