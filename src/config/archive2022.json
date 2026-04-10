@@ -1,0 +1,2687 @@
+{
+  "players": [
+    "Levis",
+    "Schmutzik",
+    "Kečup",
+    "Šruby",
+    "Šinďa",
+    "Luki",
+    "Dvory",
+    "Miky"
+  ],
+  "groupMatches": [
+    {
+      "home": "Katar",
+      "away": "Ekvádor",
+      "homeScore": 0,
+      "awayScore": 2,
+      "round": "1. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 2
+        },
+        "Schmutzik": {
+          "home": 0,
+          "away": 3
+        },
+        "Kečup": {
+          "home": 0,
+          "away": 4
+        },
+        "Šruby": {
+          "home": 0,
+          "away": 2
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 3
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 1,
+          "away": 2
+        },
+        "Miky": {
+          "home": 1,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Anglie",
+      "away": "Írán",
+      "homeScore": 6,
+      "awayScore": 2,
+      "round": "1. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 0
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 5,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 4,
+          "away": 0
+        },
+        "Šinďa": {
+          "home": 3,
+          "away": 0
+        },
+        "Luki": {
+          "home": 2,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 4,
+          "away": 0
+        },
+        "Miky": {
+          "home": 3,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Senegal",
+      "away": "Nizozemsko",
+      "homeScore": 0,
+      "awayScore": 2,
+      "round": "1. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 3
+        },
+        "Schmutzik": {
+          "home": 0,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 1,
+          "away": 2
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 2
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 1,
+          "away": 3
+        },
+        "Miky": {
+          "home": 0,
+          "away": 2
+        }
+      }
+    },
+    {
+      "home": "USA",
+      "away": "Wales",
+      "homeScore": 1,
+      "awayScore": 1,
+      "round": "1. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 1
+        },
+        "Kečup": {
+          "home": 0,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 2
+        },
+        "Šinďa": {
+          "home": 0,
+          "away": 0
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 1,
+          "away": 1
+        },
+        "Miky": {
+          "home": 1,
+          "away": 2
+        }
+      }
+    },
+    {
+      "home": "Argentina",
+      "away": "Saúdská Arábie",
+      "homeScore": 1,
+      "awayScore": 2,
+      "round": "1. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 0
+        },
+        "Schmutzik": {
+          "home": 5,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 5,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 3,
+          "away": 0
+        },
+        "Šinďa": {
+          "home": 2,
+          "away": 0
+        },
+        "Luki": {
+          "home": 3,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 6,
+          "away": 0
+        },
+        "Miky": {
+          "home": 4,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Dánsko",
+      "away": "Tunisko",
+      "homeScore": 0,
+      "awayScore": 0,
+      "round": "1. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 3,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 2,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 0
+        },
+        "Šinďa": {
+          "home": 2,
+          "away": 0
+        },
+        "Luki": {
+          "home": 2,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 2,
+          "away": 1
+        },
+        "Miky": {
+          "home": 2,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Mexiko",
+      "away": "Polsko",
+      "homeScore": 0,
+      "awayScore": 0,
+      "round": "1. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 1
+        },
+        "Kečup": {
+          "home": 0,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 2
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 1
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 0,
+          "away": 1
+        },
+        "Miky": {
+          "home": 2,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Francie",
+      "away": "Austrálie",
+      "homeScore": 4,
+      "awayScore": 1,
+      "round": "1. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 3,
+          "away": 0
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 3,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 3,
+          "away": 0
+        },
+        "Šinďa": {
+          "home": 4,
+          "away": 1
+        },
+        "Luki": {
+          "home": 1,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 3,
+          "away": 0
+        },
+        "Miky": {
+          "home": 2,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Maroko",
+      "away": "Chorvatsko",
+      "homeScore": 0,
+      "awayScore": 0,
+      "round": "1. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 4
+        },
+        "Schmutzik": {
+          "home": 0,
+          "away": 2
+        },
+        "Kečup": {
+          "home": 0,
+          "away": 3
+        },
+        "Šruby": {
+          "home": 0,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 3
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 1,
+          "away": 2
+        },
+        "Miky": {
+          "home": 1,
+          "away": 2
+        }
+      }
+    },
+    {
+      "home": "Německo",
+      "away": "Japonsko",
+      "homeScore": 1,
+      "awayScore": 2,
+      "round": "1. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 0
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 5,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 3,
+          "away": 0
+        },
+        "Šinďa": {
+          "home": 2,
+          "away": 1
+        },
+        "Luki": {
+          "home": 2,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 4,
+          "away": 0
+        },
+        "Miky": {
+          "home": 3,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Španělsko",
+      "away": "Kostarika",
+      "homeScore": 7,
+      "awayScore": 0,
+      "round": "1. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 5,
+          "away": 0
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 6,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 2,
+          "away": 0
+        },
+        "Šinďa": {
+          "home": 4,
+          "away": 0
+        },
+        "Luki": {
+          "home": 2,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 4,
+          "away": 0
+        },
+        "Miky": {
+          "home": 3,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Belgie",
+      "away": "Kanada",
+      "homeScore": 1,
+      "awayScore": 0,
+      "round": "1. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 1,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 2,
+          "away": 0
+        },
+        "Šinďa": {
+          "home": 3,
+          "away": 0
+        },
+        "Luki": {
+          "home": 2,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 3,
+          "away": 0
+        },
+        "Miky": {
+          "home": 2,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Švýcarsko",
+      "away": "Kamerun",
+      "homeScore": 1,
+      "awayScore": 0,
+      "round": "1. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 3,
+          "away": 0
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 1
+        },
+        "Kečup": {
+          "home": 2,
+          "away": 2
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 2
+        },
+        "Luki": {
+          "home": 0,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 2,
+          "away": 0
+        },
+        "Miky": {
+          "home": 1,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Uruguay",
+      "away": "Jižní Korea",
+      "homeScore": 0,
+      "awayScore": 0,
+      "round": "1. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 3,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 3,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 2,
+          "away": 2
+        },
+        "Luki": {
+          "home": 1,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 2,
+          "away": 0
+        },
+        "Miky": {
+          "home": 2,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Portugalsko",
+      "away": "Ghana",
+      "homeScore": 3,
+      "awayScore": 2,
+      "round": "1. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 4,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 3,
+          "away": 0
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 2
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 3,
+          "away": 0
+        },
+        "Miky": {
+          "home": 3,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Brazílie",
+      "away": "Srbsko",
+      "homeScore": 2,
+      "awayScore": 0,
+      "round": "1. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 3,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 3,
+          "away": 2
+        },
+        "Šruby": {
+          "home": 4,
+          "away": 0
+        },
+        "Šinďa": {
+          "home": 4,
+          "away": 1
+        },
+        "Luki": {
+          "home": 1,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 3,
+          "away": 0
+        },
+        "Miky": {
+          "home": 3,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Wales",
+      "away": "Írán",
+      "homeScore": 0,
+      "awayScore": 2,
+      "round": "2. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 0
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 2,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 0
+        },
+        "Šinďa": {
+          "home": 3,
+          "away": 0
+        },
+        "Luki": {
+          "home": 1,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 2,
+          "away": 0
+        },
+        "Miky": {
+          "home": 2,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Katar",
+      "away": "Senegal",
+      "homeScore": 1,
+      "awayScore": 3,
+      "round": "2. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 0,
+          "away": 2
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 3
+        },
+        "Kečup": {
+          "home": 1,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 0,
+          "away": 2
+        },
+        "Šinďa": {
+          "home": 0,
+          "away": 2
+        },
+        "Luki": {
+          "home": 0,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 0,
+          "away": 2
+        },
+        "Miky": {
+          "home": 1,
+          "away": 2
+        }
+      }
+    },
+    {
+      "home": "Nizozemsko",
+      "away": "Ekvádor",
+      "homeScore": 1,
+      "awayScore": 1,
+      "round": "2. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 2,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 2,
+          "away": 2
+        },
+        "Luki": {
+          "home": 0,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 2,
+          "away": 1
+        },
+        "Miky": {
+          "home": 1,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Anglie",
+      "away": "USA",
+      "homeScore": 0,
+      "awayScore": 0,
+      "round": "2. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 4,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 1
+        },
+        "Kečup": {
+          "home": 3,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 2,
+          "away": 0
+        },
+        "Šinďa": {
+          "home": 3,
+          "away": 2
+        },
+        "Luki": {
+          "home": 2,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 3,
+          "away": 0
+        },
+        "Miky": {
+          "home": 3,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Tunisko",
+      "away": "Austrálie",
+      "homeScore": 0,
+      "awayScore": 1,
+      "round": "2. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 2
+        },
+        "Kečup": {
+          "home": 0,
+          "away": 2
+        },
+        "Šruby": {
+          "home": 0,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 0,
+          "away": 0
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 1,
+          "away": 0
+        },
+        "Miky": {
+          "home": 1,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Polsko",
+      "away": "Saúdská Arábie",
+      "homeScore": 2,
+      "awayScore": 0,
+      "round": "2. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 3,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 1,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 2,
+          "away": 0
+        },
+        "Šinďa": {
+          "home": 2,
+          "away": 1
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 1,
+          "away": 0
+        },
+        "Miky": {
+          "home": 1,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Francie",
+      "away": "Dánsko",
+      "homeScore": 2,
+      "awayScore": 1,
+      "round": "2. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 3,
+          "away": 2
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 3,
+          "away": 1
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 2,
+          "away": 0
+        },
+        "Miky": {
+          "home": 2,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Argentina",
+      "away": "Mexiko",
+      "homeScore": 2,
+      "awayScore": 0,
+      "round": "2. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 0
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 1,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 3,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 3,
+          "away": 1
+        },
+        "Luki": {
+          "home": 2,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 2,
+          "away": 0
+        },
+        "Miky": {
+          "home": 2,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Japonsko",
+      "away": "Kostarika",
+      "homeScore": 0,
+      "awayScore": 1,
+      "round": "2. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 3,
+          "away": 0
+        },
+        "Schmutzik": {
+          "home": 0,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 2,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 2,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 2,
+          "away": 0
+        },
+        "Miky": {
+          "home": 3,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Belgie",
+      "away": "Maroko",
+      "homeScore": 0,
+      "awayScore": 2,
+      "round": "2. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 3,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 1,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 4,
+          "away": 0
+        },
+        "Šinďa": {
+          "home": 2,
+          "away": 0
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 2,
+          "away": 0
+        },
+        "Miky": {
+          "home": 1,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Chorvatsko",
+      "away": "Kanada",
+      "homeScore": 4,
+      "awayScore": 1,
+      "round": "2. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 2
+        },
+        "Kečup": {
+          "home": 1,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 0,
+          "away": 0
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 1,
+          "away": 0
+        },
+        "Miky": {
+          "home": 2,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Španělsko",
+      "away": "Německo",
+      "homeScore": 1,
+      "awayScore": 1,
+      "round": "2. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 2
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 1
+        },
+        "Kečup": {
+          "home": 0,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 2,
+          "away": 3
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 1
+        },
+        "Luki": {
+          "home": 2,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 2,
+          "away": 1
+        },
+        "Miky": {
+          "home": 1,
+          "away": 2
+        }
+      }
+    },
+    {
+      "home": "Kamerun",
+      "away": "Srbsko",
+      "homeScore": 3,
+      "awayScore": 3,
+      "round": "2. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 0,
+          "away": 2
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 0,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 2
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 1
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 1,
+          "away": 1
+        },
+        "Miky": {
+          "home": 0,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Jižní Korea",
+      "away": "Ghana",
+      "homeScore": 2,
+      "awayScore": 3,
+      "round": "2. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 0
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 2
+        },
+        "Kečup": {
+          "home": 0,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 2,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 2
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 0,
+          "away": 2
+        },
+        "Miky": {
+          "home": 1,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Brazílie",
+      "away": "Švýcarsko",
+      "homeScore": 1,
+      "awayScore": 0,
+      "round": "2. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 3,
+          "away": 1
+        },
+        "Kečup": {
+          "home": 4,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 3,
+          "away": 0
+        },
+        "Šinďa": {
+          "home": 3,
+          "away": 1
+        },
+        "Luki": {
+          "home": 2,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 2,
+          "away": 0
+        },
+        "Miky": {
+          "home": 1,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Portugalsko",
+      "away": "Uruguay",
+      "homeScore": 2,
+      "awayScore": 0,
+      "round": "2. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 2
+        },
+        "Kečup": {
+          "home": 1,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 1
+        },
+        "Luki": {
+          "home": 1,
+          "away": 2
+        },
+        "Dvory": {
+          "home": 2,
+          "away": 1
+        },
+        "Miky": {
+          "home": 2,
+          "away": 2
+        }
+      }
+    },
+    {
+      "home": "Ekvádor",
+      "away": "Senegal",
+      "homeScore": 1,
+      "awayScore": 2,
+      "round": "3. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 3,
+          "away": 2
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 2
+        },
+        "Kečup": {
+          "home": 0,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 0,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 0
+        },
+        "Luki": {
+          "home": 0,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 1,
+          "away": 0
+        },
+        "Miky": {
+          "home": 2,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Nizozemsko",
+      "away": "Katar",
+      "homeScore": 2,
+      "awayScore": 0,
+      "round": "3. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 0
+        },
+        "Schmutzik": {
+          "home": 5,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 4,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 3,
+          "away": 0
+        },
+        "Šinďa": {
+          "home": 3,
+          "away": 1
+        },
+        "Luki": {
+          "home": 2,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 3,
+          "away": 0
+        },
+        "Miky": {
+          "home": 5,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Írán",
+      "away": "USA",
+      "homeScore": 0,
+      "awayScore": 1,
+      "round": "3. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 0,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 0,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 0,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 2
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 3
+        },
+        "Luki": {
+          "home": 0,
+          "away": 2
+        },
+        "Dvory": {
+          "home": 0,
+          "away": 2
+        },
+        "Miky": {
+          "home": 1,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Wales",
+      "away": "Anglie",
+      "homeScore": 0,
+      "awayScore": 3,
+      "round": "3. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 0,
+          "away": 3
+        },
+        "Schmutzik": {
+          "home": 0,
+          "away": 3
+        },
+        "Kečup": {
+          "home": 0,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 0,
+          "away": 2
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 1
+        },
+        "Luki": {
+          "home": 0,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 1,
+          "away": 2
+        },
+        "Miky": {
+          "home": 0,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Austrálie",
+      "away": "Dánsko",
+      "homeScore": 1,
+      "awayScore": 0,
+      "round": "3. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 2
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 0,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 0,
+          "away": 2
+        },
+        "Luki": {
+          "home": 0,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 0,
+          "away": 2
+        },
+        "Miky": {
+          "home": 0,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Tunisko",
+      "away": "Francie",
+      "homeScore": 1,
+      "awayScore": 0,
+      "round": "3. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 3
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 4
+        },
+        "Šruby": {
+          "home": 0,
+          "away": 3
+        },
+        "Šinďa": {
+          "home": 0,
+          "away": 3
+        },
+        "Luki": {
+          "home": 0,
+          "away": 2
+        },
+        "Dvory": {
+          "home": 0,
+          "away": 2
+        },
+        "Miky": {
+          "home": 0,
+          "away": 4
+        }
+      }
+    },
+    {
+      "home": "Polsko",
+      "away": "Argentina",
+      "homeScore": 0,
+      "awayScore": 2,
+      "round": "3. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 2
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 0,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 3
+        },
+        "Šinďa": {
+          "home": 2,
+          "away": 2
+        },
+        "Luki": {
+          "home": 0,
+          "away": 2
+        },
+        "Dvory": {
+          "home": 0,
+          "away": 1
+        },
+        "Miky": {
+          "home": 1,
+          "away": 3
+        }
+      }
+    },
+    {
+      "home": "Saúdská Arábie",
+      "away": "Mexiko",
+      "homeScore": 1,
+      "awayScore": 2,
+      "round": "3. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 3
+        },
+        "Kečup": {
+          "home": 0,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 0,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 2,
+          "away": 1
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 2,
+          "away": 2
+        },
+        "Miky": {
+          "home": 1,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Chorvatsko",
+      "away": "Belgie",
+      "homeScore": 0,
+      "awayScore": 0,
+      "round": "3. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 2
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 2
+        },
+        "Kečup": {
+          "home": 1,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 2
+        },
+        "Šinďa": {
+          "home": 2,
+          "away": 0
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 2,
+          "away": 0
+        },
+        "Miky": {
+          "home": 2,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Kanada",
+      "away": "Maroko",
+      "homeScore": 1,
+      "awayScore": 2,
+      "round": "3. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 0,
+          "away": 3
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 1
+        },
+        "Kečup": {
+          "home": 1,
+          "away": 2
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 1
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 0,
+          "away": 2
+        },
+        "Miky": {
+          "home": 1,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Japonsko",
+      "away": "Španělsko",
+      "homeScore": 2,
+      "awayScore": 1,
+      "round": "3. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 0,
+          "away": 3
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 3
+        },
+        "Kečup": {
+          "home": 1,
+          "away": 3
+        },
+        "Šruby": {
+          "home": 0,
+          "away": 2
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 4
+        },
+        "Luki": {
+          "home": 0,
+          "away": 2
+        },
+        "Dvory": {
+          "home": 1,
+          "away": 1
+        },
+        "Miky": {
+          "home": 1,
+          "away": 2
+        }
+      }
+    },
+    {
+      "home": "Kostarika",
+      "away": "Německo",
+      "homeScore": 2,
+      "awayScore": 4,
+      "round": "3. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 0,
+          "away": 5
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 3
+        },
+        "Kečup": {
+          "home": 0,
+          "away": 3
+        },
+        "Šruby": {
+          "home": 0,
+          "away": 4
+        },
+        "Šinďa": {
+          "home": 0,
+          "away": 3
+        },
+        "Luki": {
+          "home": 0,
+          "away": 7
+        },
+        "Dvory": {
+          "home": 0,
+          "away": 2
+        },
+        "Miky": {
+          "home": 0,
+          "away": 4
+        }
+      }
+    },
+    {
+      "home": "Ghana",
+      "away": "Uruguay",
+      "homeScore": 0,
+      "awayScore": 2,
+      "round": "3. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 2
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 2
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 3
+        },
+        "Luki": {
+          "home": 1,
+          "away": 2
+        },
+        "Dvory": {
+          "home": 1,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Jižní Korea",
+      "away": "Portugalsko",
+      "homeScore": 2,
+      "awayScore": 1,
+      "round": "3. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 2
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 3
+        },
+        "Šinďa": {
+          "home": 2,
+          "away": 2
+        },
+        "Luki": {
+          "home": 2,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 0,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Kamerun",
+      "away": "Brazílie",
+      "homeScore": 1,
+      "awayScore": 0,
+      "round": "3. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 0,
+          "away": 3
+        },
+        "Schmutzik": {
+          "home": 0,
+          "away": 2
+        },
+        "Kečup": {
+          "home": 1,
+          "away": 2
+        },
+        "Šruby": {
+          "home": 0,
+          "away": 2
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 3
+        },
+        "Luki": {
+          "home": 0,
+          "away": 2
+        },
+        "Dvory": {
+          "home": 0,
+          "away": 2
+        },
+        "Miky": {
+          "home": 2,
+          "away": 2
+        }
+      }
+    },
+    {
+      "home": "Srbsko",
+      "away": "Švýcarsko",
+      "homeScore": 2,
+      "awayScore": 3,
+      "round": "3. KOLO",
+      "tips": {
+        "Levis": {
+          "home": 3,
+          "away": 2
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 2
+        },
+        "Kečup": {
+          "home": 1,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 2,
+          "away": 0
+        },
+        "Luki": {
+          "home": 2,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 1,
+          "away": 1
+        },
+        "Miky": {
+          "home": 1,
+          "away": 2
+        }
+      }
+    }
+  ],
+  "koMatches": [
+    {
+      "home": "Nizozemsko",
+      "away": "USA",
+      "homeScore": 3,
+      "awayScore": 1,
+      "stage": "Osmifinále",
+      "tips": {
+        "Levis": {
+          "home": 3,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 2,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 2,
+          "away": 0
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 1,
+          "away": 0
+        },
+        "Miky": {
+          "home": 2,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Argentina",
+      "away": "Austrálie",
+      "homeScore": 2,
+      "awayScore": 1,
+      "stage": "Osmifinále",
+      "tips": {
+        "Levis": {
+          "home": 4,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 2,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 3,
+          "away": 0
+        },
+        "Šinďa": {
+          "home": 3,
+          "away": 1
+        },
+        "Luki": {
+          "home": 2,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 2,
+          "away": 0
+        },
+        "Miky": {
+          "home": 2,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Francie",
+      "away": "Polsko",
+      "homeScore": 3,
+      "awayScore": 1,
+      "stage": "Osmifinále",
+      "tips": {
+        "Levis": {
+          "home": 3,
+          "away": 0
+        },
+        "Schmutzik": {
+          "home": 4,
+          "away": 1
+        },
+        "Kečup": {
+          "home": 2,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 0
+        },
+        "Šinďa": {
+          "home": 2,
+          "away": 1
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 2,
+          "away": 0
+        },
+        "Miky": {
+          "home": 4,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Anglie",
+      "away": "Senegal",
+      "homeScore": 3,
+      "awayScore": 0,
+      "stage": "Osmifinále",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 0,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 2,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 1
+        },
+        "Luki": {
+          "home": 2,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 2,
+          "away": 0
+        },
+        "Miky": {
+          "home": 1,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Japonsko",
+      "away": "Chorvatsko",
+      "homeScore": 1,
+      "awayScore": 1,
+      "stage": "Osmifinále",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 2
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 0
+        },
+        "Kečup": {
+          "home": 2,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 1
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 1,
+          "away": 2
+        },
+        "Miky": {
+          "home": 1,
+          "away": 3
+        }
+      }
+    },
+    {
+      "home": "Brazílie",
+      "away": "Jižní Korea",
+      "homeScore": 4,
+      "awayScore": 1,
+      "stage": "Osmifinále",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 3,
+          "away": 1
+        },
+        "Kečup": {
+          "home": 3,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 3,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 3,
+          "away": 1
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 3,
+          "away": 0
+        },
+        "Miky": {
+          "home": 2,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Maroko",
+      "away": "Španělsko",
+      "homeScore": 0,
+      "awayScore": 0,
+      "stage": "Osmifinále",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 4
+        },
+        "Schmutzik": {
+          "home": 0,
+          "away": 3
+        },
+        "Kečup": {
+          "home": 1,
+          "away": 2
+        },
+        "Šruby": {
+          "home": 2,
+          "away": 2
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 3
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 1,
+          "away": 2
+        },
+        "Miky": {
+          "home": 1,
+          "away": 3
+        }
+      }
+    },
+    {
+      "home": "Portugalsko",
+      "away": "Švýcarsko",
+      "homeScore": 6,
+      "awayScore": 1,
+      "stage": "Osmifinále",
+      "tips": {
+        "Levis": {
+          "home": 3,
+          "away": 2
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 2
+        },
+        "Kečup": {
+          "home": 1,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 3,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 2,
+          "away": 1
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 2,
+          "away": 0
+        },
+        "Miky": {
+          "home": 2,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Chorvatsko",
+      "away": "Brazílie",
+      "homeScore": 0,
+      "awayScore": 0,
+      "stage": "Čtvrtfinále",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 4
+        },
+        "Schmutzik": {
+          "home": 0,
+          "away": 3
+        },
+        "Kečup": {
+          "home": 1,
+          "away": 3
+        },
+        "Šruby": {
+          "home": 0,
+          "away": 2
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 3
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 0,
+          "away": 3
+        },
+        "Miky": {
+          "home": 1,
+          "away": 4
+        }
+      }
+    },
+    {
+      "home": "Nizozemsko",
+      "away": "Argentina",
+      "homeScore": 2,
+      "awayScore": 2,
+      "stage": "Čtvrtfinále",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 3
+        },
+        "Schmutzik": {
+          "home": 0,
+          "away": 1
+        },
+        "Kečup": {
+          "home": 2,
+          "away": 2
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 2,
+          "away": 2
+        },
+        "Luki": {
+          "home": 0,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 1,
+          "away": 2
+        },
+        "Miky": {
+          "home": 1,
+          "away": 1
+        }
+      }
+    },
+    {
+      "home": "Maroko",
+      "away": "Portugalsko",
+      "homeScore": 1,
+      "awayScore": 0,
+      "stage": "Čtvrtfinále",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 5
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 3
+        },
+        "Kečup": {
+          "home": 0,
+          "away": 2
+        },
+        "Šruby": {
+          "home": 0,
+          "away": 3
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 2
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 0,
+          "away": 2
+        },
+        "Miky": {
+          "home": 1,
+          "away": 3
+        }
+      }
+    },
+    {
+      "home": "Anglie",
+      "away": "Francie",
+      "homeScore": 1,
+      "awayScore": 2,
+      "stage": "Čtvrtfinále",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 3
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 2
+        },
+        "Kečup": {
+          "home": 1,
+          "away": 2
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 2,
+          "away": 2
+        },
+        "Luki": {
+          "home": 0,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 1,
+          "away": 2
+        },
+        "Miky": {
+          "home": 2,
+          "away": 2
+        }
+      }
+    },
+    {
+      "home": "Argentina",
+      "away": "Chorvatsko",
+      "homeScore": 3,
+      "awayScore": 0,
+      "stage": "Semifinále",
+      "tips": {
+        "Levis": {
+          "home": 3,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 1,
+          "away": 1
+        },
+        "Kečup": {
+          "home": 1,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 0,
+          "away": 1
+        },
+        "Šinďa": {
+          "home": 1,
+          "away": 1
+        },
+        "Luki": {
+          "home": 3,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 1,
+          "away": 0
+        },
+        "Miky": {
+          "home": 2,
+          "away": 2
+        }
+      }
+    },
+    {
+      "home": "Francie",
+      "away": "Maroko",
+      "homeScore": 2,
+      "awayScore": 0,
+      "stage": "Semifinále",
+      "tips": {
+        "Levis": {
+          "home": 2,
+          "away": 1
+        },
+        "Schmutzik": {
+          "home": 3,
+          "away": 1
+        },
+        "Kečup": {
+          "home": 3,
+          "away": 0
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 0
+        },
+        "Šinďa": {
+          "home": 3,
+          "away": 0
+        },
+        "Luki": {
+          "home": 2,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 2,
+          "away": 0
+        },
+        "Miky": {
+          "home": 2,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Chorvatsko",
+      "away": "Maroko",
+      "homeScore": 2,
+      "awayScore": 1,
+      "stage": "O 3. místo",
+      "tips": {
+        "Levis": {
+          "home": 1,
+          "away": 2
+        },
+        "Schmutzik": {
+          "home": 3,
+          "away": 1
+        },
+        "Kečup": {
+          "home": 0,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 0,
+          "away": 1
+        },
+        "Luki": {
+          "home": 1,
+          "away": 0
+        },
+        "Dvory": {
+          "home": 1,
+          "away": 1
+        },
+        "Miky": {
+          "home": 1,
+          "away": 0
+        }
+      }
+    },
+    {
+      "home": "Argentina",
+      "away": "Francie",
+      "homeScore": 2,
+      "awayScore": 2,
+      "stage": "Finále",
+      "tips": {
+        "Levis": {
+          "home": 3,
+          "away": 2
+        },
+        "Schmutzik": {
+          "home": 2,
+          "away": 4
+        },
+        "Kečup": {
+          "home": 1,
+          "away": 1
+        },
+        "Šruby": {
+          "home": 1,
+          "away": 3
+        },
+        "Šinďa": {
+          "home": 2,
+          "away": 2
+        },
+        "Luki": {
+          "home": 1,
+          "away": 1
+        },
+        "Dvory": {
+          "home": 2,
+          "away": 1
+        },
+        "Miky": {
+          "home": 0,
+          "away": 2
+        }
+      }
+    }
+  ],
+  "winnerBets": {
+    "Levis": "Argentina",
+    "Schmutzik": "Brazílie",
+    "Kečup": "Německo",
+    "Šruby": "Portugal",
+    "Šinďa": "Brazílie",
+    "Luki": "Argentina",
+    "Dvory": "Brazílie",
+    "Miky": "Brazilie"
+  },
+  "actualWinner": "Argentina",
+  "groupTotals": {
+    "Levis": {
+      "money": 280,
+      "tips": 5
+    },
+    "Schmutzik": {
+      "money": 686,
+      "tips": 6
+    },
+    "Kečup": {
+      "money": 200,
+      "tips": 2
+    },
+    "Šruby": {
+      "money": 360,
+      "tips": 4
+    },
+    "Šinďa": {
+      "money": 640,
+      "tips": 2
+    },
+    "Luki": {
+      "money": 586,
+      "tips": 4
+    },
+    "Dvory": {
+      "money": 66,
+      "tips": 2
+    },
+    "Miky": {
+      "money": 840,
+      "tips": 4
+    }
+  },
+  "koTotals": {
+    "Levis": {
+      "money": 1000,
+      "tips": 6
+    },
+    "Schmutzik": {
+      "money": 792,
+      "tips": 7
+    },
+    "Kečup": {
+      "money": 706,
+      "tips": 4
+    },
+    "Šruby": {
+      "money": 573,
+      "tips": 5
+    },
+    "Šinďa": {
+      "money": 1864,
+      "tips": 5
+    },
+    "Luki": {
+      "money": 1412,
+      "tips": 6
+    },
+    "Dvory": {
+      "money": 385,
+      "tips": 4
+    },
+    "Miky": {
+      "money": 1053,
+      "tips": 5
+    }
+  }
+}
