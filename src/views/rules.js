@@ -37,7 +37,7 @@ export function renderRules(container) {
           <li>Pokud trefí výsledek <strong>víc hráčů</strong>, bank se mezi ně rovnoměrně rozdělí.</li>
           <li>Pokud <strong>nikdo netrefí</strong>, bank se kumuluje a přechází do dalšího zápasu.</li>
           <li>Bank z neúspěšných tipů ve skupinách se na konci přenese do vyřazovací fáze.</li>
-          <li>Při správném tipu na vítěze turnaje hráč bere celý winner bank (carry-over z minulého turnaje + 100 Kč × počet hráčů).</li>
+          <li>Při správném tipu na vítěze turnaje hráč bere celý bank na vítěze (přenos z minulého turnaje + 100 Kč × počet hráčů).</li>
         </ul>
       </div>
 

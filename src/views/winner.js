@@ -38,7 +38,7 @@ export async function renderWinner(container) {
     <div class="bank-hero">
       <div class="bank-hero-label">🏆 Bank na vítěze</div>
       <div class="bank-hero-amount">${Math.round(winnerBank)} Kč</div>
-      <div class="bank-hero-sub">${RULES_2026.winnerBankCarryOver} Kč z Eura 2024</div>
+      <div class="bank-hero-sub">přenos ${RULES_2026.winnerBankCarryOver} Kč z Eura 2024</div>
     </div>
 
     <!-- TIPOVÁNÍ (před deadline) / PŘEHLED (po deadline) -->
@@ -87,7 +87,7 @@ export async function renderWinner(container) {
             }).join('')}
           </tbody>
         </table>
-      ` : '<p style="color: var(--color-text-dim); text-align: center; padding: 16px;">Zatím nikdo netipnul vítěze.</p>'}
+      ` : '<p style="color: var(--color-text-dim); text-align: center; padding: 16px;">Zatím nikdo netipoval vítěze.</p>'}
     </div>
   `
 

@@ -136,7 +136,7 @@ function renderTournament(content, data, title) {
       <h2>${title}</h2>
       <p style="color: var(--color-text-dim)">
         Vítěz turnaje: <strong style="color: var(--color-gold)">${data.actualWinner}</strong>
-        ${!anyoneGotWinner ? ' — <span style="color: var(--color-locked)">nikdo netipnul!</span>' : ''}
+        ${!anyoneGotWinner ? ' — <span style="color: var(--color-locked)">nikdo netipoval!</span>' : ''}
       </p>
     </div>
 

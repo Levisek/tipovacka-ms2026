@@ -46,7 +46,7 @@ export function renderWinnerBet(myBet, allBets) {
                 </div>
               `).join('')}
             </div>
-          ` : '<p style="color: var(--color-text-dim); padding: 12px;">Žádné tipy.</p>'}
+          ` : '<p style="color: var(--color-text-dim); padding: 12px;">Zatím žádné tipy.</p>'}
         </div>
       </details>
     `

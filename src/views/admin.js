@@ -133,7 +133,7 @@ export function renderAdmin(container) {
         <button class="btn-admin" id="btn-load-bets" style="margin-left: 8px; padding: 4px 10px; font-size: 12px;">Obnovit</button>
       </p>
       <div id="bets-log" class="admin-log" style="margin-top: 12px;">
-        <p style="color: var(--color-text-dim);">Načítám...</p>
+        <p style="color: var(--color-text-dim);">Načítám…</p>
       </div>
     </div>
 
@@ -202,7 +202,7 @@ export function renderAdmin(container) {
   async function loadBets() {
     const logEl = document.getElementById('bets-log')
     if (!logEl) return
-    logEl.innerHTML = '<p style="color: var(--color-text-dim);">Načítám...</p>'
+    logEl.innerHTML = '<p style="color: var(--color-text-dim);">Načítám…</p>'
     try {
       const results = await Promise.all(MATCHES.map(async (m) => {
         const bets = await getAllBets(m.id)
@@ -283,7 +283,7 @@ export function renderAdmin(container) {
   // Stáhnout výsledky z API
   document.getElementById('btn-seed').addEventListener('click', async () => {
     const status = document.getElementById('seed-status')
-    status.textContent = 'Stahuji z API...'
+    status.textContent = 'Stahuji z API…'
     try {
       const { fetchAllResults } = await import('../services/resultService.js')
       const result = await fetchAllResults()

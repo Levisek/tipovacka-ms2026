@@ -73,7 +73,7 @@ export async function renderStandings(container) {
     <div class="bank-hero">
       <div class="bank-hero-label">💰 Aktuální bank</div>
       <div class="bank-hero-amount">${formatKc(currentBank)}</div>
-      <div class="bank-hero-sub">čeká na příští správný tip</div>
+      <div class="bank-hero-sub">čeká na další správný tip</div>
     </div>
 
     <div class="standings-summary">
