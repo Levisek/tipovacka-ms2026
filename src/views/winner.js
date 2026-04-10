@@ -36,7 +36,7 @@ export async function renderWinner(container) {
     <div class="bank-hero">
       <div class="bank-hero-label">🏆 Bank na vítěze</div>
       <div class="bank-hero-amount">${Math.round(winnerBank)} Kč</div>
-      <div class="bank-hero-sub">${RULES_2026.winnerBankCarryOver} Kč carry-over z Eura 2024 + ${entries.length} × ${RULES_2026.winnerBet} Kč</div>
+      <div class="bank-hero-sub">${RULES_2026.winnerBankCarryOver} Kč z Eura 2024</div>
     </div>
 
     <!-- TIPOVÁNÍ (před deadline) / PŘEHLED (po deadline) -->

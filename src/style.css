@@ -549,15 +549,17 @@ h3 { font-size: 16px; font-weight: 500; }
 
 .deadline-banner-time {
   font-family: var(--font-heading);
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 700;
   color: var(--wc-green);
   line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.5px;
 }
 
 .deadline-banner-time.urgent {
-  color: var(--wc-orange);
-  animation: pulse 1.5s infinite;
+  color: var(--wc-red);
+  animation: pulse 1s infinite;
 }
 
 .deadline-banner-time.locked {
@@ -568,6 +570,19 @@ h3 { font-size: 16px; font-weight: 500; }
   font-size: 12px;
   color: var(--color-text-dim);
   margin-top: 2px;
+}
+
+/* Urgent state — celý banner červený poslední hodinu */
+.deadline-banner.urgent {
+  background: linear-gradient(135deg, rgba(226, 0, 26, 0.15), rgba(255, 107, 0, 0.10));
+  border-color: var(--wc-red);
+  box-shadow: 0 2px 14px rgba(226, 0, 26, 0.25);
+  animation: bannerPulse 2s ease-in-out infinite;
+}
+
+@keyframes bannerPulse {
+  0%, 100% { box-shadow: 0 2px 14px rgba(226, 0, 26, 0.25); }
+  50% { box-shadow: 0 2px 20px rgba(226, 0, 26, 0.45); }
 }
 
 @keyframes pulse {

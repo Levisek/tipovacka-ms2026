@@ -72,16 +72,17 @@ export function timeUntilDeadline(dateStr) {
 
   if (diff <= 0) return 'Uzavřeno'
 
-  const hours = Math.floor(diff / 3600000)
-  const minutes = Math.floor((diff % 3600000) / 60000)
-  const seconds = Math.floor((diff % 60000) / 1000)
+  const totalSeconds = Math.floor(diff / 1000)
+  const days = Math.floor(totalSeconds / 86400)
+  const hours = Math.floor((totalSeconds % 86400) / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
 
-  if (hours > 24) {
-    const days = Math.floor(hours / 24)
-    return `${days}d ${hours % 24}h`
-  }
-  if (hours > 0) return `${hours}h ${minutes}m`
-  if (minutes > 0) return `${minutes}m ${seconds}s`
+  const pad = (n) => String(n).padStart(2, '0')
+
+  if (days > 0) return `${days}d ${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`
+  if (hours > 0) return `${hours}h ${pad(minutes)}m ${pad(seconds)}s`
+  if (minutes > 0) return `${minutes}m ${pad(seconds)}s`
   return `${seconds}s`
 }
 
