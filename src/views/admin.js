@@ -5,16 +5,13 @@ import { getAllBets } from '../services/betService.js'
 import { getTeam } from '../config/teams.js'
 import * as store from '../services/matchStore.js'
 
-// Pravidla MS 2026
-const GROUP_BET = 10    // Kč za zápas
-const KO_DAILY = 40     // Kč za den
+// Pravidla MS 2026 (sázka vždy za zápas)
+const GROUP_BET = 20    // Kč za zápas
+const KO_MATCH_BET = 40 // Kč za zápas
 const WINNER_BET = 100  // Kč za tip na vítěze
 
 const groupMatches = MATCHES.filter(m => m.stage === 'group')
 const koMatches = MATCHES.filter(m => m.stage !== 'group')
-
-// Spočítej hrací dny ve vyřazovačce
-const koDays = new Set(koMatches.map(m => m.date)).size
 
 const ADMIN_PIN = '2026'
 const ADMIN_KEY = 'ms2026_admin_auth'
@@ -51,8 +48,8 @@ export function renderAdmin(container) {
   }
 
   const players = getPlayers()
-  const groupDeposit = groupMatches.length * GROUP_BET // 48 × 10 = 480
-  const koDeposit = koDays * KO_DAILY
+  const groupDeposit = groupMatches.length * GROUP_BET // např. 72 × 20 = 1440
+  const koDeposit = koMatches.length * KO_MATCH_BET   // např. 32 × 40 = 1280
   const totalDeposit = groupDeposit + koDeposit + WINNER_BET
 
   container.innerHTML = `
@@ -65,7 +62,7 @@ export function renderAdmin(container) {
       <h2>Přehled plateb</h2>
       <p style="color: var(--color-text-dim); margin-bottom: 12px;">
         Skupiny: ${groupMatches.length} zápasů × ${GROUP_BET} Kč = <strong>${groupDeposit} Kč</strong><br>
-        Vyřazovačka: ${koDays} hracích dnů × ${KO_DAILY} Kč = <strong>${koDeposit} Kč</strong><br>
+        Vyřazovačka: ${koMatches.length} zápasů × ${KO_MATCH_BET} Kč = <strong>${koDeposit} Kč</strong><br>
         Tip na vítěze: <strong>${WINNER_BET} Kč</strong><br>
         <br>
         Celkem na hráče: <strong style="color: var(--color-gold);">${totalDeposit} Kč</strong>

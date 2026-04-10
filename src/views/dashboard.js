@@ -6,11 +6,13 @@ import { renderWinnerBet, initWinnerBet } from '../components/winnerBet.js'
 import { getPlayerName } from '../services/auth.js'
 import { formatDateFull, getDeadlineTime, isPastDeadline } from '../utils/date.js'
 import { getPlayerBet, getAllBets, getWinnerBets } from '../services/betService.js'
+import { computeLiveStandings } from '../services/standingsService.js'
 
 // Cache tipů (přežije mezi renders)
 const _betCache = {}
 const _allBetsCache = {}
 let _winnerBets = {}
+let _currentBank = 0
 
 export function renderDashboard(container) {
   const player = getPlayerName()
@@ -74,7 +76,7 @@ export function renderDashboard(container) {
     <div class="section-header">
       <h1>Tipovačka</h1>
     </div>
-    ${renderBankTicker(0)}
+    ${renderBankTicker(_currentBank)}
     ${renderWinnerBet(_winnerBets[player] || null, _winnerBets)}
     <div class="phase-tabs">
       <button class="phase-tab ${phase === 'group' ? 'active' : ''}" data-phase="group">
@@ -183,10 +185,27 @@ export function renderDashboard(container) {
     loadBetsAndRerender(matches, player, container)
   }
   loadWinnerBetsAndRerender(container)
+  loadBankAndRerender(container)
 
   // Auto-update
   const unsubscribe = store.onChange(() => renderDashboard(container))
   return () => unsubscribe()
+}
+
+let _bankLoadInProgress = false
+async function loadBankAndRerender(container) {
+  if (_bankLoadInProgress) return
+  _bankLoadInProgress = true
+  try {
+    const result = await computeLiveStandings()
+    const newBank = Math.round(result.currentBank)
+    if (newBank !== _currentBank) {
+      _currentBank = newBank
+      renderDashboard(container)
+    }
+  } catch (e) {} finally {
+    _bankLoadInProgress = false
+  }
 }
 
 let _winnerLoadInProgress = false

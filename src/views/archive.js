@@ -200,7 +200,7 @@ function renderTournament(content, data, title) {
     <div class="archive-stats">
       <h3>Finanční bilance</h3>
       <p style="color: var(--color-text-dim); font-size: 13px; margin-bottom: 12px;">
-        Skupiny: ${rules.groupBet} Kč/zápas · Vyřazovačka: ${rules.koDailyBet} Kč/den · Tip na vítěze: ${rules.winnerBet} Kč
+        Skupiny: ${rules.groupBet} Kč/zápas · Vyřazovačka: ${rules.koMatchBet} Kč/zápas · Tip na vítěze: ${rules.winnerBet} Kč
       </p>
       <div class="table-scroll">
         <table class="standings-table">
