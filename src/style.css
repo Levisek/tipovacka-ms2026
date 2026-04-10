@@ -482,6 +482,154 @@ h3 { font-size: 16px; font-weight: 500; }
 .badge-live { background: var(--color-live-bg); color: var(--color-live); }
 .badge-finished { background: var(--color-gold-dim); color: var(--color-gold); }
 
+/* ===== WINNER BET ===== */
+.winner-bet {
+  margin-bottom: 24px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.winner-bet-active {
+  background: linear-gradient(135deg, rgba(255, 209, 0, 0.10), rgba(255, 107, 0, 0.06));
+  border: 2px solid var(--color-gold);
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(255, 209, 0, 0.15);
+}
+
+.winner-bet-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.winner-bet-header h2 {
+  flex: 1;
+  font-family: var(--font-heading);
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.winner-bet-icon {
+  font-size: 24px;
+}
+
+.winner-bet-price {
+  background: var(--color-gold);
+  color: #000;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+.winner-bet-desc {
+  color: var(--color-text-dim);
+  font-size: 13px;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.winner-bet-form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.winner-bet-form select {
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+#winner-bet-status {
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+/* Po deadline — collapsible */
+.winner-bet-locked {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: 0;
+}
+
+.winner-bet-locked summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--color-text);
+  user-select: none;
+  list-style: none;
+}
+
+.winner-bet-locked summary::-webkit-details-marker {
+  display: none;
+}
+
+.winner-bet-locked summary::after {
+  content: '▾';
+  margin-left: auto;
+  color: var(--color-text-dim);
+  transition: transform 0.2s;
+}
+
+.winner-bet-locked[open] summary::after {
+  transform: rotate(180deg);
+}
+
+.winner-bet-mine {
+  font-size: 13px;
+  color: var(--color-text-dim);
+  font-weight: 400;
+}
+
+.winner-bet-mine strong {
+  color: var(--color-gold);
+}
+
+.winner-bet-content {
+  border-top: 1px solid var(--color-border);
+  padding: 8px 0;
+}
+
+.winner-bets-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.winner-bet-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 18px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.winner-bet-row:last-child {
+  border-bottom: none;
+}
+
+.winner-bet-row.mine {
+  background: var(--color-gold-dim);
+}
+
+.winner-bet-player {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.winner-bet-team {
+  color: var(--color-gold);
+  font-weight: 600;
+}
+
 /* ===== BANK TICKER ===== */
 .bank-ticker {
   display: flex;

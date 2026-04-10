@@ -2,13 +2,15 @@ import * as store from '../services/matchStore.js'
 import { renderMatchCard } from '../components/matchCard.js'
 import { initBetForms } from '../components/betForm.js'
 import { renderBankTicker } from '../components/bankTicker.js'
+import { renderWinnerBet, initWinnerBet } from '../components/winnerBet.js'
 import { getPlayerName } from '../services/auth.js'
 import { formatDateFull, getDeadlineTime, isPastDeadline } from '../utils/date.js'
-import { getPlayerBet, getAllBets } from '../services/betService.js'
+import { getPlayerBet, getAllBets, getWinnerBets } from '../services/betService.js'
 
 // Cache tipů (přežije mezi renders)
 const _betCache = {}
 const _allBetsCache = {}
+let _winnerBets = {}
 
 export function renderDashboard(container) {
   const player = getPlayerName()
@@ -73,6 +75,7 @@ export function renderDashboard(container) {
       <h1>Tipovačka</h1>
     </div>
     ${renderBankTicker(0)}
+    ${renderWinnerBet(_winnerBets[player] || null, _winnerBets)}
     <div class="phase-tabs">
       <button class="phase-tab ${phase === 'group' ? 'active' : ''}" data-phase="group">
         Základní skupiny <span class="phase-count">${allMatches.filter(m => m.stage === 'group').length}</span>
@@ -170,14 +173,35 @@ export function renderDashboard(container) {
     })
   }
 
+  // Init tip na vítěze
+  if (player) {
+    initWinnerBet(container, () => loadWinnerBetsAndRerender(container))
+  }
+
   // Načti tipy z Firebase na pozadí (po renderu) a překresli
   if (player && matches.length > 0) {
     loadBetsAndRerender(matches, player, container)
   }
+  loadWinnerBetsAndRerender(container)
 
   // Auto-update
   const unsubscribe = store.onChange(() => renderDashboard(container))
   return () => unsubscribe()
+}
+
+let _winnerLoadInProgress = false
+async function loadWinnerBetsAndRerender(container) {
+  if (_winnerLoadInProgress) return
+  _winnerLoadInProgress = true
+  try {
+    const bets = await getWinnerBets()
+    if (JSON.stringify(_winnerBets) !== JSON.stringify(bets)) {
+      _winnerBets = bets
+      renderDashboard(container)
+    }
+  } catch (e) {} finally {
+    _winnerLoadInProgress = false
+  }
 }
 
 let _loadInProgress = false
