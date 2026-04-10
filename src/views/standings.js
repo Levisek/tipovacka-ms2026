@@ -1,6 +1,8 @@
 import { computeLiveStandings } from '../services/standingsService.js'
 import * as store from '../services/matchStore.js'
 
+let _standingsUnsub = null
+
 const STANDINGS_SNAPSHOT_KEY = 'ms2026_standings_snapshot'
 
 function loadPrevSnapshot() {
@@ -172,9 +174,12 @@ export async function renderStandings(container) {
     `}
   `
 
-  // Auto-update při změně výsledků
-  const unsubscribe = store.onChange(() => renderStandings(container))
-  return () => unsubscribe()
+  // Auto-update při změně výsledků — vyčisti starou subscription
+  if (_standingsUnsub) _standingsUnsub()
+  _standingsUnsub = store.onChange(() => renderStandings(container))
+  return () => {
+    if (_standingsUnsub) { _standingsUnsub(); _standingsUnsub = null }
+  }
 }
 
 function renderPodiumCard(player, rank) {

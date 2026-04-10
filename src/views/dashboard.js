@@ -14,6 +14,7 @@ const _betCache = {}
 const _allBetsCache = {}
 let _winnerBets = {}
 let _currentBank = 0
+let _storeUnsubscribe = null
 
 export function renderDashboard(container) {
   const player = getPlayerName()
@@ -210,11 +211,21 @@ export function renderDashboard(container) {
     setupLiveBetListeners(current, container)
   }
 
-  // Auto-update
-  const unsubscribe = store.onChange(() => renderDashboard(container))
+  // Auto-update — vyčisti starou subscription před přidáním nové
+  if (_storeUnsubscribe) _storeUnsubscribe()
+  _storeUnsubscribe = store.onChange(() => renderDashboard(container))
+
   return () => {
-    unsubscribe()
+    if (_storeUnsubscribe) {
+      _storeUnsubscribe()
+      _storeUnsubscribe = null
+    }
     if (countdownCleanup) countdownCleanup()
+    // Vyčisti i live Firebase listenery
+    for (const [id, unsub] of _liveListeners) {
+      try { unsub() } catch (e) {}
+      _liveListeners.delete(id)
+    }
   }
 }
 

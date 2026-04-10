@@ -4,6 +4,7 @@ import { formatDateShort } from '../utils/date.js'
 import { getAllBets } from '../services/betService.js'
 import { getTeam } from '../config/teams.js'
 import * as store from '../services/matchStore.js'
+import { placeBet } from '../services/betService.js'
 
 // Pravidla MS 2026 (sázka vždy za zápas)
 const GROUP_BET = 20    // Kč za zápas
@@ -112,6 +113,16 @@ export function renderAdmin(container) {
       </p>
       <button class="btn-admin" id="btn-seed">Stáhnout výsledky</button>
       <div id="seed-status"></div>
+    </div>
+
+    <!-- TEST DATA -->
+    <div class="admin-section">
+      <h2>Testovací data</h2>
+      <p style="color: var(--color-text-dim); margin-bottom: 12px; font-size: 13px;">
+        Vyplní fiktivní tipy všech 7 hráčů na první zápas turnaje.
+      </p>
+      <button class="btn-admin" id="btn-seed-bets">Naplnit testovací tipy</button>
+      <div id="seed-bets-status" style="margin-top: 8px;"></div>
     </div>
 
     <!-- TIPY HRÁČŮ -->
@@ -227,6 +238,47 @@ export function renderAdmin(container) {
   }
   document.getElementById('btn-load-bets').addEventListener('click', loadBets)
   loadBets() // automaticky při otevření
+
+  // Naplnit testovací tipy na první zápas
+  document.getElementById('btn-seed-bets').addEventListener('click', async () => {
+    const status = document.getElementById('seed-bets-status')
+    const allMatches = [...store.getAllMatches()]
+      .sort((a, b) => (a.date || '').localeCompare(b.date || '') || a.kickoff.localeCompare(b.kickoff))
+    const firstMatch = allMatches[0]
+    if (!firstMatch) {
+      status.textContent = '✗ Žádný zápas nenalezen'
+      status.style.color = 'var(--color-locked)'
+      return
+    }
+    const allPlayers = getPlayers()
+    if (allPlayers.length === 0) {
+      status.textContent = '✗ Žádní hráči'
+      status.style.color = 'var(--color-locked)'
+      return
+    }
+    // Fiktivní tipy — různé pro každého hráče
+    const fakeTips = [
+      { home: 1, away: 0 }, { home: 2, away: 1 }, { home: 0, away: 0 },
+      { home: 3, away: 2 }, { home: 1, away: 1 }, { home: 2, away: 0 },
+      { home: 0, away: 1 }, { home: 3, away: 1 }, { home: 1, away: 2 },
+    ]
+    status.textContent = `Ukládám tipy na ${firstMatch.home} vs ${firstMatch.away}...`
+    status.style.color = 'var(--color-text-dim)'
+    try {
+      let saved = 0
+      for (let i = 0; i < allPlayers.length; i++) {
+        const tip = fakeTips[i % fakeTips.length]
+        await placeBet(firstMatch.id, allPlayers[i], tip.home, tip.away)
+        saved++
+      }
+      status.textContent = `✓ Uloženo ${saved} tipů na ${firstMatch.home} vs ${firstMatch.away}`
+      status.style.color = 'var(--color-open)'
+      loadBets()
+    } catch (e) {
+      status.textContent = '✗ Chyba: ' + e.message
+      status.style.color = 'var(--color-locked)'
+    }
+  })
 
   // Stáhnout výsledky z API
   document.getElementById('btn-seed').addEventListener('click', async () => {

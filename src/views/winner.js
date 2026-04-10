@@ -3,6 +3,8 @@ import { renderWinnerBet, initWinnerBet } from '../components/winnerBet.js'
 import { getPlayerName } from '../services/auth.js'
 import * as store from '../services/matchStore.js'
 
+let _winnerUnsub = null
+
 export async function renderWinner(container) {
   container.innerHTML = `
     <div class="section-header">
@@ -94,7 +96,10 @@ export async function renderWinner(container) {
     initWinnerBet(container.querySelector('#winner-bet-area'), () => renderWinner(container))
   }
 
-  // Auto-update při změně výsledků
-  const unsubscribe = store.onChange(() => renderWinner(container))
-  return () => unsubscribe()
+  // Auto-update při změně výsledků — vyčisti starou subscription
+  if (_winnerUnsub) _winnerUnsub()
+  _winnerUnsub = store.onChange(() => renderWinner(container))
+  return () => {
+    if (_winnerUnsub) { _winnerUnsub(); _winnerUnsub = null }
+  }
 }
