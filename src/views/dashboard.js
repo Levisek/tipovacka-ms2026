@@ -5,7 +5,7 @@ import { renderBankTicker } from '../components/bankTicker.js'
 import { renderWinnerBet, initWinnerBet } from '../components/winnerBet.js'
 import { getPlayerName } from '../services/auth.js'
 import { formatDateFull, getDeadlineTime, isPastDeadline } from '../utils/date.js'
-import { getPlayerBet, getAllBets, getWinnerBets } from '../services/betService.js'
+import { getPlayerBet, getAllBets, getWinnerBets, onBetsChange } from '../services/betService.js'
 import { computeLiveStandings } from '../services/standingsService.js'
 import { startCountdown } from '../components/countdown.js'
 
@@ -205,6 +205,11 @@ export function renderDashboard(container) {
   loadWinnerBetsAndRerender(container)
   loadBankAndRerender(container)
 
+  // Live Firebase listenery na tipy aktuálního dne (instant updates)
+  if (current.length > 0) {
+    setupLiveBetListeners(current, container)
+  }
+
   // Auto-update
   const unsubscribe = store.onChange(() => renderDashboard(container))
   return () => {
@@ -254,15 +259,17 @@ async function loadBetsAndRerender(matches, player, container) {
       try {
         const [bet, allBets] = await Promise.all([
           getPlayerBet(m.id, player),
-          isPastDeadline(m.date) ? getAllBets(m.id) : Promise.resolve(null)
+          getAllBets(m.id),
         ])
         if (bet && JSON.stringify(_betCache[m.id]) !== JSON.stringify(bet)) {
           _betCache[m.id] = bet
           changed = true
         }
         if (allBets && Object.keys(allBets).length > 0) {
-          _allBetsCache[m.id] = allBets
-          changed = true
+          if (JSON.stringify(_allBetsCache[m.id]) !== JSON.stringify(allBets)) {
+            _allBetsCache[m.id] = allBets
+            changed = true
+          }
         }
       } catch (e) {}
     }))
@@ -270,4 +277,29 @@ async function loadBetsAndRerender(matches, player, container) {
     _loadInProgress = false
   }
   if (changed) renderDashboard(container)
+}
+
+// Live listenery na bets pro current day matches
+const _liveListeners = new Map()
+function setupLiveBetListeners(matches, container) {
+  // Vyčisti staré listenery které tu už nepatří
+  for (const [matchId, unsub] of _liveListeners) {
+    if (!matches.find(m => m.id === matchId)) {
+      unsub()
+      _liveListeners.delete(matchId)
+    }
+  }
+  // Přidej nové
+  matches.forEach(m => {
+    if (_liveListeners.has(m.id)) return
+    try {
+      const unsub = onBetsChange(m.id, (bets) => {
+        if (JSON.stringify(_allBetsCache[m.id]) !== JSON.stringify(bets)) {
+          _allBetsCache[m.id] = bets
+          renderDashboard(container)
+        }
+      })
+      _liveListeners.set(m.id, unsub)
+    } catch (e) {}
+  })
 }

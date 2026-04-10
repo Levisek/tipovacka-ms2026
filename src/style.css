@@ -919,6 +919,15 @@ h3 { font-size: 16px; font-weight: 500; }
   font-weight: 600;
 }
 
+.bet-row.eliminated {
+  opacity: 0.45;
+}
+
+.bet-row.eliminated .bet-player,
+.bet-row.eliminated .bet-tip {
+  text-decoration: line-through;
+}
+
 .bet-player {
   color: var(--color-text-dim);
 }
@@ -1246,6 +1255,20 @@ h3 { font-size: 16px; font-weight: 500; }
   .bank-hero { padding: 20px 16px; }
   .bank-hero-amount { font-size: 42px; }
 }
+
+/* ===== RANK MOVEMENT ===== */
+.rank-mov {
+  display: inline-block;
+  font-size: 12px;
+  width: 16px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.rank-mov.up { color: var(--color-open); }
+.rank-mov.down { color: var(--color-locked); }
+.rank-mov.same { color: var(--color-text-dim); opacity: 0.5; }
+.rank-mov.new { color: var(--color-accent); font-size: 8px; vertical-align: middle; }
 
 /* ===== WINNER SECTION (žebříček) ===== */
 .winner-section {

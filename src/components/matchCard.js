@@ -72,17 +72,28 @@ export function renderMatchCard(match, options = {}) {
     `
   }
 
-  // All bets (po deadline)
+  // All bets — viditelné po deadline nebo když je výsledek
   let allBetsHtml = ''
-  if (options.allBets && pastDeadline) {
+  if (options.allBets && (pastDeadline || hasResult)) {
     const betsEntries = Object.entries(options.allBets)
     if (betsEntries.length > 0) {
+      // Pomocná funkce: může tento tip ještě trefit přesný výsledek?
+      // Pravidlo: pokud aktuální skóre už přesahuje tip, nelze vyhrát.
+      const canStillWin = (bet) => {
+        if (!hasResult) return true
+        if (isLive) {
+          return bet.home >= match.homeScore && bet.away >= match.awayScore
+        }
+        return bet.home === match.homeScore && bet.away === match.awayScore
+      }
+
       allBetsHtml = `
         <div class="all-bets">
           ${betsEntries.map(([player, bet]) => {
-            const isCorrect = hasResult && bet.home === match.homeScore && bet.away === match.awayScore
-            return `<div class="bet-row ${isCorrect ? 'correct' : ''}">
-              <span class="bet-player">${player}</span>
+            const isCorrect = hasResult && !isLive && bet.home === match.homeScore && bet.away === match.awayScore
+            const eliminated = (isLive || hasResult) && !canStillWin(bet) && !isCorrect
+            return `<div class="bet-row ${isCorrect ? 'correct' : ''} ${eliminated ? 'eliminated' : ''}">
+              <span class="bet-player">${player}${eliminated ? ' ❌' : ''}</span>
               <span class="bet-tip">${bet.home} : ${bet.away}</span>
             </div>`
           }).join('')}

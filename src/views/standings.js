@@ -1,6 +1,20 @@
 import { computeLiveStandings } from '../services/standingsService.js'
 import * as store from '../services/matchStore.js'
 
+const STANDINGS_SNAPSHOT_KEY = 'ms2026_standings_snapshot'
+
+function loadPrevSnapshot() {
+  try {
+    return JSON.parse(localStorage.getItem(STANDINGS_SNAPSHOT_KEY) || '{}')
+  } catch (e) { return {} }
+}
+
+function saveSnapshot(standings) {
+  const snapshot = {}
+  standings.forEach((p, i) => { snapshot[p.name] = i + 1 })
+  localStorage.setItem(STANDINGS_SNAPSHOT_KEY, JSON.stringify(snapshot))
+}
+
 export async function renderStandings(container) {
   // Skeleton hned
   container.innerHTML = `
@@ -24,6 +38,28 @@ export async function renderStandings(container) {
   const { standings, currentBank, totalDeposit, totalWon, actualWinner, tournamentFinished, winnerBets, winnerBank, eliminations } = result
   const podium = standings.slice(0, 3)
   const anyTipsYet = standings.some(p => p.correctTips > 0 || p.deposit > 0)
+
+  // Pohyby v žebříčku — porovnání s předchozím snapshotem
+  const prevSnapshot = loadPrevSnapshot()
+  const movements = {}
+  standings.forEach((p, i) => {
+    const currentRank = i + 1
+    const prevRank = prevSnapshot[p.name]
+    if (prevRank == null) movements[p.name] = 'new'
+    else if (prevRank > currentRank) movements[p.name] = 'up'
+    else if (prevRank < currentRank) movements[p.name] = 'down'
+    else movements[p.name] = 'same'
+  })
+  // Ulož aktuální snapshot pro příští srovnání
+  if (anyTipsYet) saveSnapshot(standings)
+
+  const renderMovement = (name) => {
+    const m = movements[name]
+    if (m === 'up') return '<span class="rank-mov up">▲</span>'
+    if (m === 'down') return '<span class="rank-mov down">▼</span>'
+    if (m === 'new') return '<span class="rank-mov new">●</span>'
+    return '<span class="rank-mov same">–</span>'
+  }
 
   const formatKc = (n) => `${Math.round(n)} Kč`
 
@@ -64,6 +100,7 @@ export async function renderStandings(container) {
             <thead>
               <tr>
                 <th>#</th>
+                <th></th>
                 <th>Hráč</th>
                 <th>Skupiny</th>
                 <th>Vyřazovačka</th>
@@ -74,6 +111,7 @@ export async function renderStandings(container) {
               ${[...standings].sort((a,b) => b.correctTips - a.correctTips).map((p, i) => `
                 <tr>
                   <td class="rank rank-${i + 1}">${i + 1}.</td>
+                  <td>${renderMovement(p.name)}</td>
                   <td style="font-weight: 600; color: var(--color-text);">${p.name}</td>
                   <td>${p.correctGroup}</td>
                   <td>${p.correctKo}</td>
@@ -93,6 +131,7 @@ export async function renderStandings(container) {
             <thead>
               <tr>
                 <th>#</th>
+                <th></th>
                 <th>Hráč</th>
                 <th>Skupiny</th>
                 <th>Vyřazovačka</th>
@@ -105,6 +144,7 @@ export async function renderStandings(container) {
               ${standings.map((p, i) => `
                 <tr>
                   <td class="rank rank-${i + 1}">${i + 1}.</td>
+                  <td>${renderMovement(p.name)}</td>
                   <td style="font-weight: 600; color: var(--color-text);">${p.name}</td>
                   <td style="color: var(--color-gold);">${formatKc(p.groupWin)}</td>
                   <td style="color: var(--color-gold);">${formatKc(p.koWin)}</td>
