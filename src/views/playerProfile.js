@@ -3,6 +3,11 @@ import { getPlayers } from '../services/auth.js'
 import { HOME_TEAM } from '../config/teams.js'
 import archive2022 from '../config/archive2022.json'
 import archiveEuro2024 from '../config/archiveEuro2024.json'
+import * as store from '../services/matchStore.js'
+import { onBetsChange } from '../services/betService.js'
+
+let _profileUnsub = null
+let _profileBetUnsubs = []
 
 export async function renderPlayerProfile(container, params) {
   const playerName = decodeURIComponent(params.name || '')
@@ -119,15 +124,14 @@ export async function renderPlayerProfile(container, params) {
     <div class="profile-section profile-fun">
       <h2>😄 Sranda statistiky</h2>
 
-      ${stats.worstTip ? `
+      ${stats.longestMissStreak > 0 ? `
         <div class="profile-fun-item">
           <span class="profile-fun-icon">💀</span>
           <div>
-            <div class="profile-fun-label">Nejhorší tip ever</div>
+            <div class="profile-fun-label">Nejdelší šňůra netrefení</div>
             <div class="profile-fun-value">
-              ${stats.worstTip.match}: tipnul <strong>${stats.worstTip.tip}</strong>,
-              skutečnost <strong>${stats.worstTip.result}</strong>
-              <span style="color: var(--color-text-dim);">(rozdíl ${stats.worstTip.diff} branek · ${stats.worstTip.source})</span>
+              <strong>${stats.longestMissStreak} zápasů</strong> v řadě bez přesného tipu
+              ${stats.currentMissStreak > 0 ? `<span style="color: var(--color-text-dim);"> · aktuálně netrefil ${stats.currentMissStreak}×</span>` : ''}
             </div>
           </div>
         </div>
@@ -144,6 +148,42 @@ export async function renderPlayerProfile(container, params) {
       ` : ''}
     </div>
   `
+
+  // ===== LIVE UPDATES =====
+  // Vyčisti staré subscriptions (pokud byly z předchozího renderu)
+  if (_profileUnsub) { _profileUnsub(); _profileUnsub = null }
+  _profileBetUnsubs.forEach(u => { try { u() } catch (e) {} })
+  _profileBetUnsubs = []
+
+  // 1) Sleduj změny matchStore (zadání výsledků)
+  _profileUnsub = store.onChange(() => renderPlayerProfile(container, params))
+
+  // 2) Sleduj změny tipů přes Firebase live listenery (jen pro MS 2026 zápasy)
+  if (isCurrentPlayer) {
+    const allMatches = store.getAllMatches()
+    let pending = false
+    allMatches.forEach(m => {
+      try {
+        const unsub = onBetsChange(m.id, () => {
+          if (pending) return
+          pending = true
+          // Throttle: re-render až po 500ms aby se neudělalo 100 renderů zaráz
+          setTimeout(() => {
+            pending = false
+            renderPlayerProfile(container, params)
+          }, 500)
+        })
+        _profileBetUnsubs.push(unsub)
+      } catch (e) {}
+    })
+  }
+
+  // Cleanup return — router ho zavolá při změně routy
+  return () => {
+    if (_profileUnsub) { _profileUnsub(); _profileUnsub = null }
+    _profileBetUnsubs.forEach(u => { try { u() } catch (e) {} })
+    _profileBetUnsubs = []
+  }
 }
 
 function renderArchiveBox(arch) {

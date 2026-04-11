@@ -97,32 +97,48 @@ export async function computePlayerStats(playerName) {
   const ms2022 = computeArchiveStats(archive2022, 'MS 2022')
   const euro2024 = computeArchiveStats(archiveEuro2024, 'Euro 2024')
 
-  // 4) NEJHORŠÍ TIP — z historie + aktuálního MS 2026
-  let worstTip = null
-  const checkBet = (m, bet, source) => {
-    if (m.homeScore === null || m.homeScore === undefined) return
-    const diff = Math.abs(bet.home - m.homeScore) + Math.abs(bet.away - m.awayScore)
-    if (!worstTip || diff > worstTip.diff) {
-      worstTip = {
-        diff,
-        tip: `${bet.home}:${bet.away}`,
-        result: `${m.homeScore}:${m.awayScore}`,
-        match: `${m.home} vs ${m.away}`,
-        source,
-      }
+  // 4) ŠŇŮRA NETREFENÍ — chronologicky přes všechny turnaje
+  // (kolik zápasů v řadě hráč netrefil přesný výsledek)
+  // Sestavíme jednu chronologickou frontu zápasů které hráč tipoval a měly výsledek
+  const allTippedMatches = []
+  // 2022 + 2024 — v archivu nemáme přesné datum, ale můžeme použít pořadí
+  archive2022.groupMatches.forEach((m, i) => {
+    const t = m.tips?.[playerName]
+    if (t && m.homeScore !== null) allTippedMatches.push({ order: 1000 + i, t, m })
+  })
+  archive2022.koMatches?.forEach((m, i) => {
+    const t = m.tips?.[playerName]
+    if (t && m.homeScore !== null) allTippedMatches.push({ order: 2000 + i, t, m })
+  })
+  archiveEuro2024.groupMatches.forEach((m, i) => {
+    const t = m.tips?.[playerName]
+    if (t && m.homeScore !== null) allTippedMatches.push({ order: 3000 + i, t, m })
+  })
+  archiveEuro2024.koMatches?.forEach((m, i) => {
+    const t = m.tips?.[playerName]
+    if (t && m.homeScore !== null) allTippedMatches.push({ order: 4000 + i, t, m })
+  })
+  // 2026 — chronologicky podle date+kickoff
+  matchesTipped
+    .filter(({ match }) => match.homeScore !== null && match.homeScore !== undefined)
+    .sort((a, b) => (a.match.date || '').localeCompare(b.match.date || '') || a.match.kickoff.localeCompare(b.match.kickoff))
+    .forEach(({ match, bet }, i) => {
+      allTippedMatches.push({ order: 5000 + i, t: bet, m: match })
+    })
+
+  let longestMissStreak = 0
+  let currentMissStreak = 0
+  let runningMiss = 0
+  for (const { t, m } of allTippedMatches.sort((a, b) => a.order - b.order)) {
+    const correct = t.home === m.homeScore && t.away === m.awayScore
+    if (!correct) {
+      runningMiss++
+      if (runningMiss > longestMissStreak) longestMissStreak = runningMiss
+    } else {
+      runningMiss = 0
     }
   }
-
-  // 2022
-  archive2022.groupMatches.concat(archive2022.koMatches || []).forEach(m => {
-    const t = m.tips?.[playerName]; if (t) checkBet(m, t, 'MS 2022')
-  })
-  // 2024
-  archiveEuro2024.groupMatches.concat(archiveEuro2024.koMatches || []).forEach(m => {
-    const t = m.tips?.[playerName]; if (t) checkBet(m, t, 'Euro 2024')
-  })
-  // 2026 (live)
-  matchesTipped.forEach(({ match, bet }) => checkBet(match, bet, 'MS 2026'))
+  currentMissStreak = runningMiss
 
   // 5) OBLÍBENÝ VÝSLEDEK — co tipuji nejčastěji
   const allTipsCounts = {}
@@ -152,7 +168,8 @@ export async function computePlayerStats(playerName) {
       winnerBet2026,
     },
     history: { ms2022, euro2024 },
-    worstTip,
+    longestMissStreak,
+    currentMissStreak,
     favoriteResult: favoriteResult ? { score: favoriteResult[0], count: favoriteResult[1] } : null,
   }
 }
