@@ -159,12 +159,19 @@ export async function renderPlayerProfile(container, params) {
   _profileUnsub = store.onChange(() => renderPlayerProfile(container, params))
 
   // 2) Sleduj změny tipů přes Firebase live listenery (jen pro MS 2026 zápasy)
+  // POZN.: onBetsChange emituje initial snapshot ihned po setup, ten musíme přeskočit
+  // jinak by re-render → re-setup → re-emit → nekonečná smyčka
   if (isCurrentPlayer) {
     const allMatches = store.getAllMatches()
     let pending = false
     allMatches.forEach(m => {
+      let firstCall = true
       try {
         const unsub = onBetsChange(m.id, () => {
+          if (firstCall) {
+            firstCall = false
+            return // initial snapshot, ne změna
+          }
           if (pending) return
           pending = true
           // Throttle: re-render až po 500ms aby se neudělalo 100 renderů zaráz
