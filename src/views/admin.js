@@ -14,7 +14,7 @@ const WINNER_BET = 100  // Kč za tip na vítěze
 const groupMatches = MATCHES.filter(m => m.stage === 'group')
 const koMatches = MATCHES.filter(m => m.stage !== 'group')
 
-const ADMIN_PIN = '2026'
+const ADMIN_PIN = 'AdminjeBuh7'
 const ADMIN_KEY = 'ms2026_admin_auth'
 
 export function renderAdmin(container) {
