@@ -3,8 +3,7 @@ import { MATCHES } from '../config/schedule.js'
 import { isPastDeadline } from '../utils/date.js'
 import { placeWinnerBet, getWinnerBets } from '../services/betService.js'
 import { getPlayerName } from '../services/auth.js'
-
-const TOURNAMENT_BET = 100 // Kč
+import { RULES_2026 } from '../services/standingsService.js'
 
 /**
  * Vrátí true pokud už proběhl deadline prvního zápasu turnaje
@@ -58,7 +57,7 @@ export function renderWinnerBet(myBet, allBets) {
       <div class="winner-bet-header">
         <span class="winner-bet-icon">🏆</span>
         <h2>Tip na vítěze turnaje</h2>
-        <span class="winner-bet-price">${TOURNAMENT_BET} Kč</span>
+        <span class="winner-bet-price">${RULES_2026.winnerBet} Kč</span>
       </div>
       <p class="winner-bet-desc">
         Tipni si, který tým vyhraje MS 2026. Tip lze měnit do začátku prvního zápasu.

@@ -1,9 +1,10 @@
 import { computeLiveStandings } from '../services/standingsService.js'
 import * as store from '../services/matchStore.js'
+import { STORAGE_KEYS } from '../config/constants.js'
 
 let _standingsUnsub = null
 
-const STANDINGS_SNAPSHOT_KEY = 'ms2026_standings_snapshot'
+const STANDINGS_SNAPSHOT_KEY = STORAGE_KEYS.STANDINGS_SNAPSHOT
 
 function loadPrevSnapshot() {
   try {

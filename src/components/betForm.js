@@ -1,3 +1,5 @@
+import { MAX_SCORE } from '../config/constants.js'
+
 /**
  * Inicializuje event listenery pro bet formuláře v kontejneru
  * @param {HTMLElement} container
@@ -18,12 +20,12 @@ export function initBetForms(container, onSubmit) {
       lockedForm.outerHTML = `
         <div class="bet-form" data-match-id="${matchId}">
           <div style="text-align: right">
-            <input type="number" class="bet-input" data-side="home" min="0" max="20"
+            <input type="number" class="bet-input" data-side="home" min="0" max="${MAX_SCORE}"
               value="${homeVal}" placeholder="-">
           </div>
           <button class="bet-submit" data-match-id="${matchId}">Tipni</button>
           <div>
-            <input type="number" class="bet-input" data-side="away" min="0" max="20"
+            <input type="number" class="bet-input" data-side="away" min="0" max="${MAX_SCORE}"
               value="${awayVal}" placeholder="-">
           </div>
         </div>

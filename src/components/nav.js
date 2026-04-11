@@ -1,11 +1,12 @@
 import { getPlayerName } from '../services/auth.js'
+import { APP_BRAND_NAME, APP_SUBTITLE } from '../config/constants.js'
 
 export function renderNav() {
   const player = getPlayerName()
   return `
     <nav role="navigation" aria-label="Hlavní navigace">
       <a href="#/" class="nav-brand">
-        <span class="nav-title">Pískové doly<span class="nav-subtitle">Tipovačka MS 2026</span></span>
+        <span class="nav-title">${APP_BRAND_NAME}<span class="nav-subtitle">${APP_SUBTITLE}</span></span>
       </a>
       <ul class="nav-links" id="navLinks">
         <li><a href="#/">Tipovačka</a></li>

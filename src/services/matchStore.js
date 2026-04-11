@@ -4,13 +4,14 @@
  * Všechny views čtou odsud, ne přímo z config/schedule.js.
  */
 import { MATCHES } from '../config/schedule.js'
+import { STORAGE_KEYS } from '../config/constants.js'
 
 // Klonuj výchozí data
 const matchMap = new Map()
 MATCHES.forEach(m => matchMap.set(m.id, { ...m, homeScore: null, awayScore: null, status: 'scheduled' }))
 
 // Načti uložené výsledky z localStorage
-const STORAGE_KEY = 'ms2026_results'
+const STORAGE_KEY = STORAGE_KEYS.RESULTS
 try {
   const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
   for (const [id, result] of Object.entries(saved)) {
@@ -102,7 +103,7 @@ export function bulkUpdate(updates) {
 /**
  * Hromadná aktualizace rozpisu (datum, kickoff, týmy) z API
  */
-const SCHEDULE_OVERRIDE_KEY = 'ms2026_schedule_override'
+const SCHEDULE_OVERRIDE_KEY = STORAGE_KEYS.SCHEDULE_OVERRIDE
 
 // Aplikuj overrides ze localStorage při startu
 try {

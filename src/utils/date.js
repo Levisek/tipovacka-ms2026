@@ -1,4 +1,5 @@
 import { MATCHES } from '../config/schedule.js'
+import { DEADLINE_MINUTES_BEFORE_MATCH } from '../config/constants.js'
 
 // Cache: nejranější kickoff pro každý hrací den
 const firstKickoffByDate = {}
@@ -43,7 +44,7 @@ export function getDeadline(dateStr) {
   const [h, m] = firstKickoff.split(':').map(Number)
   const d = new Date(dateStr)
   d.setHours(h, m, 0, 0)
-  d.setMinutes(d.getMinutes() - 90) // minus 1.5 hodiny
+  d.setMinutes(d.getMinutes() - DEADLINE_MINUTES_BEFORE_MATCH)
   return d
 }
 

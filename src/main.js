@@ -47,6 +47,11 @@ if (!getPlayerName()) {
 // Start router
 startRouter()
 
-// Auto-polling výsledků z API (každých 5 min)
-import { startPolling } from './services/resultService.js'
+// Auto-sync s football-data.org API
+import { startPolling, fetchSchedule } from './services/resultService.js'
+
+// 1) Při startu stáhni aktuální rozpis (časy + týmy po losování)
+fetchSchedule().catch(() => {})
+
+// 2) Auto-polling výsledků (každých 60s)
 startPolling()

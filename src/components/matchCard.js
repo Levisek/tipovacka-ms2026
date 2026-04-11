@@ -1,6 +1,7 @@
 import { getTeam, flagImg, HOME_TEAM } from '../config/teams.js'
 import { formatDateShort, formatTime, isPastDeadline, timeUntilDeadline, getDeadlineTime } from '../utils/date.js'
 import { STAGE_NAMES } from '../config/schedule.js'
+import { MAX_SCORE } from '../config/constants.js'
 
 /**
  * Vykreslí kartu zápasu
@@ -63,12 +64,12 @@ export function renderMatchCard(match, options = {}) {
     betHtml = `
       <div class="bet-form" data-match-id="${match.id}">
         <div style="text-align: right">
-          <input type="number" class="bet-input" data-side="home" min="0" max="20"
+          <input type="number" class="bet-input" data-side="home" min="0" max="${MAX_SCORE}"
             value="" placeholder="-">
         </div>
         <button class="bet-submit" data-match-id="${match.id}">Tipni</button>
         <div>
-          <input type="number" class="bet-input" data-side="away" min="0" max="20"
+          <input type="number" class="bet-input" data-side="away" min="0" max="${MAX_SCORE}"
             value="" placeholder="-">
         </div>
       </div>

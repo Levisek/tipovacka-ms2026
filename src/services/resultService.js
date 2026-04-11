@@ -1,5 +1,6 @@
 import { MATCHES } from '../config/schedule.js'
 import * as store from './matchStore.js'
+import { POLLING_INTERVAL_MS, CEST_OFFSET_HOURS } from '../config/constants.js'
 
 // football-data.org free tier (10 req/min)
 const API_BASE = 'https://api.football-data.org/v4'
@@ -139,7 +140,7 @@ export async function fetchSchedule() {
 function utcToCest(utcIsoStr) {
   const utc = new Date(utcIsoStr)
   // Letní čas v ČR je UTC+2 (CEST). MS 2026 hraje v červnu/červenci → vždy CEST.
-  const cest = new Date(utc.getTime() + 2 * 3600000)
+  const cest = new Date(utc.getTime() + CEST_OFFSET_HOURS * 3600000)
   const date = cest.toISOString().slice(0, 10)
   const time = cest.toISOString().slice(11, 16)
   return { date, time }
@@ -237,12 +238,12 @@ export async function fetchTodayResults() {
 }
 
 /**
- * Spustí polling (každých 60s)
+ * Spustí polling výsledků (interval z constants.js)
  */
 export function startPolling() {
   if (pollingInterval) return
   fetchTodayResults()
-  pollingInterval = setInterval(fetchTodayResults, 60000)
+  pollingInterval = setInterval(fetchTodayResults, POLLING_INTERVAL_MS)
 }
 
 /**

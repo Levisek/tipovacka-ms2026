@@ -5,21 +5,19 @@ import { getAllBets } from '../services/betService.js'
 import { getTeam } from '../config/teams.js'
 import * as store from '../services/matchStore.js'
 import { placeBet } from '../services/betService.js'
+import { RULES_2026 } from '../services/standingsService.js'
+import { ADMIN_PIN, ADMIN_SESSION_KEY, MAX_SCORE, STORAGE_KEYS } from '../config/constants.js'
 
-// Pravidla MS 2026 (sázka vždy za zápas)
-const GROUP_BET = 20    // Kč za zápas
-const KO_MATCH_BET = 40 // Kč za zápas
-const WINNER_BET = 100  // Kč za tip na vítěze
+const GROUP_BET = RULES_2026.groupBet
+const KO_MATCH_BET = RULES_2026.koMatchBet
+const WINNER_BET = RULES_2026.winnerBet
 
 const groupMatches = MATCHES.filter(m => m.stage === 'group')
 const koMatches = MATCHES.filter(m => m.stage !== 'group')
 
-const ADMIN_PIN = 'AdminjeBuh7'
-const ADMIN_KEY = 'ms2026_admin_auth'
-
 export function renderAdmin(container) {
   // Kontrola hesla
-  if (sessionStorage.getItem(ADMIN_KEY) !== 'true') {
+  if (sessionStorage.getItem(ADMIN_SESSION_KEY) !== 'true') {
     container.innerHTML = `
       <div class="section-header">
         <h1>Admin</h1>
@@ -36,7 +34,7 @@ export function renderAdmin(container) {
     document.getElementById('btn-admin-login').addEventListener('click', () => {
       const pin = document.getElementById('admin-pin').value
       if (pin === ADMIN_PIN) {
-        sessionStorage.setItem(ADMIN_KEY, 'true')
+        sessionStorage.setItem(ADMIN_SESSION_KEY, 'true')
         renderAdmin(container)
       } else {
         document.getElementById('pin-error').textContent = 'Špatné heslo'
@@ -168,9 +166,9 @@ export function renderAdmin(container) {
             return `<option value="${m.id}">${label}</option>`
           }).join('')}
         </select>
-        <input type="number" id="result-home" class="bet-input" min="0" max="20" placeholder="0" style="width: 60px;">
+        <input type="number" id="result-home" class="bet-input" min="0" max="${MAX_SCORE}" placeholder="0" style="width: 60px;">
         <span style="font-weight: 700;">:</span>
-        <input type="number" id="result-away" class="bet-input" min="0" max="20" placeholder="0" style="width: 60px;">
+        <input type="number" id="result-away" class="bet-input" min="0" max="${MAX_SCORE}" placeholder="0" style="width: 60px;">
         <button class="btn-admin btn-gold" id="btn-save-result">Uložit</button>
       </div>
       <div id="result-status" style="margin-top: 8px; font-size: 13px;"></div>
@@ -259,8 +257,8 @@ export function renderAdmin(container) {
   document.getElementById('btn-clear-cache').addEventListener('click', () => {
     const status = document.getElementById('clear-cache-status')
     if (!confirm('Opravdu smazat lokální výsledky a cache žebříčku z tohoto prohlížeče?')) return
-    localStorage.removeItem('ms2026_results')
-    localStorage.removeItem('ms2026_standings_snapshot')
+    localStorage.removeItem(STORAGE_KEYS.RESULTS)
+    localStorage.removeItem(STORAGE_KEYS.STANDINGS_SNAPSHOT)
     status.textContent = '✓ Cache vyčištěna, stránka se za 1s znovu načte…'
     status.style.color = 'var(--color-open)'
     setTimeout(() => location.reload(), 1000)

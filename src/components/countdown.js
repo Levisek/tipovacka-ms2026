@@ -1,4 +1,5 @@
 import { timeUntilDeadline, isPastDeadline, getDeadline } from '../utils/date.js'
+import { COUNTDOWN_UPDATE_INTERVAL_MS, URGENT_THRESHOLD_MS } from '../config/constants.js'
 
 /**
  * Spustí countdown pro nejbližší deadline
@@ -22,7 +23,7 @@ export function startCountdown(dateStr, element) {
     element.textContent = past ? '🔒 Uzavřeno' : text
     const stateClass = past
       ? 'locked'
-      : (getDeadline(dateStr) - new Date() < 3600000) ? 'urgent' : ''
+      : (getDeadline(dateStr) - new Date() < URGENT_THRESHOLD_MS) ? 'urgent' : ''
     element.className = (baseClass + ' ' + stateClass).trim()
     if (banner) {
       banner.className = (baseBannerClass + ' ' + stateClass).trim()
@@ -30,7 +31,7 @@ export function startCountdown(dateStr, element) {
   }
 
   update()
-  const interval = setInterval(update, 1000)
+  const interval = setInterval(update, COUNTDOWN_UPDATE_INTERVAL_MS)
 
   return () => clearInterval(interval)
 }
