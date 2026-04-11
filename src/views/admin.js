@@ -107,12 +107,16 @@ export function renderAdmin(container) {
 
     <!-- SEED -->
     <div class="admin-section">
-      <h2>Stáhnout výsledky z API</h2>
+      <h2>Synchronizace s football-data.org</h2>
       <p style="color: var(--color-text-dim); margin-bottom: 12px;">
-        Stáhne aktuální výsledky z football-data.org a aktualizuje rozpis.
+        Stáhne data z oficiálního API. Rozpis zaktualizuje časy a týmy
+        (např. po losování KO fáze), výsledky stáhne aktuální skóre.
       </p>
-      <button class="btn-admin" id="btn-seed">Stáhnout výsledky</button>
-      <div id="seed-status"></div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="btn-admin" id="btn-seed-schedule">Stáhnout rozpis</button>
+        <button class="btn-admin" id="btn-seed">Stáhnout výsledky</button>
+      </div>
+      <div id="seed-status" style="margin-top: 8px;"></div>
     </div>
 
 
@@ -306,7 +310,8 @@ export function renderAdmin(container) {
   // Stáhnout výsledky z API
   document.getElementById('btn-seed').addEventListener('click', async () => {
     const status = document.getElementById('seed-status')
-    status.textContent = 'Stahuji z API…'
+    status.textContent = 'Stahuji výsledky z API…'
+    status.style.color = 'var(--color-text-dim)'
     try {
       const { fetchAllResults } = await import('../services/resultService.js')
       const result = await fetchAllResults()
@@ -315,6 +320,27 @@ export function renderAdmin(container) {
         status.style.color = 'var(--color-locked)'
       } else {
         status.textContent = `✓ Spárováno ${result.matched} zápasů, aktualizováno ${result.updated} výsledků.`
+        status.style.color = 'var(--color-open)'
+      }
+    } catch (e) {
+      status.textContent = '✗ Chyba: ' + e.message
+      status.style.color = 'var(--color-locked)'
+    }
+  })
+
+  // Stáhnout rozpis (časy + týmy)
+  document.getElementById('btn-seed-schedule').addEventListener('click', async () => {
+    const status = document.getElementById('seed-status')
+    status.textContent = 'Stahuji rozpis z API…'
+    status.style.color = 'var(--color-text-dim)'
+    try {
+      const { fetchSchedule } = await import('../services/resultService.js')
+      const result = await fetchSchedule()
+      if (result.error) {
+        status.textContent = '✗ ' + result.error
+        status.style.color = 'var(--color-locked)'
+      } else {
+        status.textContent = `✓ Aktualizováno ${result.changed} zápasů z ${result.total}. Refresh stránky aby se projevilo všude.`
         status.style.color = 'var(--color-open)'
       }
     } catch (e) {

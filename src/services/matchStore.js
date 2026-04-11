@@ -100,6 +100,44 @@ export function bulkUpdate(updates) {
 }
 
 /**
+ * Hromadná aktualizace rozpisu (datum, kickoff, týmy) z API
+ */
+const SCHEDULE_OVERRIDE_KEY = 'ms2026_schedule_override'
+
+// Aplikuj overrides ze localStorage při startu
+try {
+  const overrides = JSON.parse(localStorage.getItem(SCHEDULE_OVERRIDE_KEY) || '{}')
+  for (const [id, ov] of Object.entries(overrides)) {
+    if (matchMap.has(id)) {
+      Object.assign(matchMap.get(id), ov)
+    }
+  }
+} catch (e) {}
+
+export function bulkUpdateSchedule(updates) {
+  const overrides = JSON.parse(localStorage.getItem(SCHEDULE_OVERRIDE_KEY) || '{}')
+  let changed = 0
+  for (const u of updates) {
+    const match = matchMap.get(u.id)
+    if (!match) continue
+    const ov = {}
+    if (u.date && u.date !== match.date) { match.date = u.date; ov.date = u.date }
+    if (u.kickoff && u.kickoff !== match.kickoff) { match.kickoff = u.kickoff; ov.kickoff = u.kickoff }
+    if (u.home && u.home !== match.home) { match.home = u.home; ov.home = u.home }
+    if (u.away && u.away !== match.away) { match.away = u.away; ov.away = u.away }
+    if (Object.keys(ov).length > 0) {
+      overrides[u.id] = { ...(overrides[u.id] || {}), ...ov }
+      changed++
+    }
+  }
+  if (changed > 0) {
+    localStorage.setItem(SCHEDULE_OVERRIDE_KEY, JSON.stringify(overrides))
+    notify()
+  }
+  return changed
+}
+
+/**
  * Přidej listener na změny
  */
 export function onChange(fn) {
