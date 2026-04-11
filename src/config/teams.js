@@ -104,3 +104,8 @@ export function getTeam(name) {
  * Všechny skupiny
  */
 export const GROUPS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
+
+/**
+ * Náš tým — pro highlight 🇨🇿
+ */
+export const HOME_TEAM = 'Česko'

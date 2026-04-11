@@ -1,6 +1,6 @@
 import { STAGE_NAMES } from '../config/schedule.js'
 import * as store from '../services/matchStore.js'
-import { GROUPS, getTeam, flagImg } from '../config/teams.js'
+import { GROUPS, getTeam, flagImg, HOME_TEAM } from '../config/teams.js'
 import { formatDateShort } from '../utils/date.js'
 
 export function renderSchedule(container) {
@@ -49,16 +49,18 @@ function renderGroups(content) {
     <div class="groups-grid">
       ${GROUPS.map(group => {
         const matches = store.getMatchesByGroup(group)
+        const isOurGroup = matches.some(m => m.home === HOME_TEAM || m.away === HOME_TEAM)
         return `
-          <div class="group-card">
+          <div class="group-card${isOurGroup ? ' our-group' : ''}">
             <h3 class="group-card-title">Skupina ${group}</h3>
             <div class="group-matches">
               ${matches.map(m => {
                 const home = getTeam(m.home)
                 const away = getTeam(m.away)
                 const hasResult = m.homeScore !== null && m.homeScore !== undefined
+                const isOurMatch = m.home === HOME_TEAM || m.away === HOME_TEAM
                 return `
-                  <a href="#/match/${m.id}" class="group-match-row">
+                  <a href="#/match/${m.id}" class="group-match-row${isOurMatch ? ' our-team' : ''}">
                     <span class="gm-date">${formatDateShort(m.date)}</span>
                     <span class="gm-home">${m.home} ${flagImg(home.flag, 16)}</span>
                     <span class="gm-score">${hasResult ? `${m.homeScore} : ${m.awayScore}` : m.kickoff}</span>
@@ -109,16 +111,17 @@ function renderKnockoutCard(match) {
   const home = getTeam(match.home)
   const away = getTeam(match.away)
   const hasResult = match.homeScore !== null && match.homeScore !== undefined
+  const isOurMatch = match.home === HOME_TEAM || match.away === HOME_TEAM
 
   return `
-    <a href="#/match/${match.id}" class="knockout-card">
+    <a href="#/match/${match.id}" class="knockout-card${isOurMatch ? ' our-team' : ''}">
       <div class="kc-header">
         <span>${formatDateShort(match.date)} · ${match.kickoff}</span>
         <span class="kc-city">${match.city}</span>
       </div>
-      <div class="kc-team">${flagImg(home.flag, 20)} ${match.home}</div>
+      <div class="kc-team">${flagImg(home.flag, 20)} ${match.home}${match.home === HOME_TEAM ? ' 🇨🇿' : ''}</div>
       <div class="kc-vs">${hasResult ? `${match.homeScore} : ${match.awayScore}` : 'vs'}</div>
-      <div class="kc-team">${flagImg(away.flag, 20)} ${match.away}</div>
+      <div class="kc-team">${flagImg(away.flag, 20)} ${match.away}${match.away === HOME_TEAM ? ' 🇨🇿' : ''}</div>
     </a>
   `
 }

@@ -1,4 +1,4 @@
-import { getTeam, flagImg } from '../config/teams.js'
+import { getTeam, flagImg, HOME_TEAM } from '../config/teams.js'
 import { formatDateShort, formatTime, isPastDeadline, timeUntilDeadline, getDeadlineTime } from '../utils/date.js'
 import { STAGE_NAMES } from '../config/schedule.js'
 
@@ -13,6 +13,9 @@ export function renderMatchCard(match, options = {}) {
   const hasResult = match.homeScore !== null && match.homeScore !== undefined
   const pastDeadline = isPastDeadline(match.date)
   const isLive = match.status === 'live'
+  const isHomeOurs = match.home === HOME_TEAM
+  const isAwayOurs = match.away === HOME_TEAM
+  const isOurMatch = isHomeOurs || isAwayOurs
 
   let statusBadge = ''
   if (hasResult && !isLive) {
@@ -103,19 +106,19 @@ export function renderMatchCard(match, options = {}) {
   }
 
   return `
-    <div class="match-card" data-match-id="${match.id}">
+    <div class="match-card${isOurMatch ? ' our-team' : ''}" data-match-id="${match.id}">
       <div class="match-card-header">
         <span class="group-label">${stageLabel} · ${formatTime(match.kickoff)}</span>
         ${statusBadge}
       </div>
       <div class="match-teams">
-        <div class="match-team home">
+        <div class="match-team home${isHomeOurs ? ' our-team-side' : ''}">
           <span class="flag">${flagImg(home.flag)}</span>
-          <span class="name">${match.home}</span>
+          <span class="name">${match.home}${isHomeOurs ? ' 🇨🇿' : ''}</span>
         </div>
         ${scoreHtml}
-        <div class="match-team away">
-          <span class="name">${match.away}</span>
+        <div class="match-team away${isAwayOurs ? ' our-team-side' : ''}">
+          <span class="name">${isAwayOurs ? '🇨🇿 ' : ''}${match.away}</span>
           <span class="flag">${flagImg(away.flag)}</span>
         </div>
       </div>
