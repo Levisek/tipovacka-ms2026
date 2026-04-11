@@ -126,6 +126,17 @@ export function renderAdmin(container) {
       <div id="seed-bets-status" style="margin-top: 8px;"></div>
     </div>
 
+    <!-- LOKÁLNÍ CACHE -->
+    <div class="admin-section">
+      <h2>Vyčistit lokální cache</h2>
+      <p style="color: var(--color-text-dim); margin-bottom: 12px; font-size: 13px;">
+        Smaže lokálně uložené výsledky zápasů a snapshot žebříčku z tohoto prohlížeče.
+        Nemaže nic ve Firebase, jen tvůj lokální stav.
+      </p>
+      <button class="btn-admin" id="btn-clear-cache">Vyčistit cache</button>
+      <div id="clear-cache-status" style="margin-top: 8px;"></div>
+    </div>
+
     <!-- TIPY HRÁČŮ -->
     <div class="admin-section">
       <h2>Tipy hráčů</h2>
@@ -239,6 +250,17 @@ export function renderAdmin(container) {
   }
   document.getElementById('btn-load-bets').addEventListener('click', loadBets)
   loadBets() // automaticky při otevření
+
+  // Vyčistit lokální cache (výsledky + standings snapshot)
+  document.getElementById('btn-clear-cache').addEventListener('click', () => {
+    const status = document.getElementById('clear-cache-status')
+    if (!confirm('Opravdu smazat lokální výsledky a cache žebříčku z tohoto prohlížeče?')) return
+    localStorage.removeItem('ms2026_results')
+    localStorage.removeItem('ms2026_standings_snapshot')
+    status.textContent = '✓ Cache vyčištěna, stránka se za 1s znovu načte…'
+    status.style.color = 'var(--color-open)'
+    setTimeout(() => location.reload(), 1000)
+  })
 
   // Naplnit testovací tipy na první zápas
   document.getElementById('btn-seed-bets').addEventListener('click', async () => {
