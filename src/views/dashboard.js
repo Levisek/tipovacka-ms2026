@@ -77,10 +77,10 @@ export function renderDashboard(container) {
     <div class="section-header">
       <h1>Tipovačka</h1>
     </div>
-    <a href="#/standings" class="bank-hero" style="text-decoration: none; display: block;">
+    <a href="#/standings" class="bank-hero bank-hero-compact${_currentBank > 0 ? ' active' : ' empty'}" style="text-decoration: none; display: block;">
       <div class="bank-hero-label">💰 Aktuální bank</div>
       <div class="bank-hero-amount">${Math.round(_currentBank)} Kč</div>
-      <div class="bank-hero-sub">čeká na další správný tip · klikni pro žebříček</div>
+      <div class="bank-hero-sub">${_currentBank > 0 ? 'čeká na další správný tip · klikni pro žebříček' : 'zatím prázdný · klikni pro žebříček'}</div>
     </a>
     ${currentDay && !isPastDeadline(currentDay) ? `
       <div class="deadline-banner" id="deadline-banner">

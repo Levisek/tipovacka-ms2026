@@ -1314,6 +1314,103 @@ h3 { font-size: 16px; font-weight: 500; }
   .bank-hero-amount { font-size: 42px; }
 }
 
+/* Kompaktní varianta pro dashboard */
+.bank-hero-compact {
+  padding: 16px 18px;
+}
+
+.bank-hero-compact .bank-hero-amount {
+  font-size: 38px;
+}
+
+.bank-hero-compact .bank-hero-label {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+}
+
+.bank-hero-compact .bank-hero-sub {
+  font-size: 11px;
+}
+
+@media (max-width: 600px) {
+  .bank-hero-compact { padding: 14px 14px; }
+  .bank-hero-compact .bank-hero-amount { font-size: 32px; }
+}
+
+/* Aktivní stav — bank má peníze, glow + shimmer */
+.bank-hero.active {
+  animation: bankActiveGlow 3s ease-in-out infinite;
+}
+
+.bank-hero.active::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(255, 215, 0, 0.18),
+    transparent);
+  animation: bankShimmer 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.bank-hero.active .bank-hero-amount {
+  animation: bankAmountPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes bankActiveGlow {
+  0%, 100% {
+    box-shadow: 0 4px 16px rgba(255, 209, 0, 0.18);
+    border-color: var(--color-gold);
+  }
+  50% {
+    box-shadow: 0 6px 28px rgba(255, 209, 0, 0.45),
+                0 0 0 1px rgba(255, 209, 0, 0.3);
+    border-color: #FFE040;
+  }
+}
+
+@keyframes bankShimmer {
+  0% { left: -50%; }
+  60%, 100% { left: 110%; }
+}
+
+@keyframes bankAmountPulse {
+  0%, 100% {
+    text-shadow: 0 2px 8px rgba(255, 209, 0, 0.3);
+  }
+  50% {
+    text-shadow: 0 2px 16px rgba(255, 209, 0, 0.6),
+                 0 0 30px rgba(255, 209, 0, 0.3);
+  }
+}
+
+/* Prázdný stav — mdlý */
+.bank-hero.empty {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  box-shadow: none;
+  opacity: 0.7;
+}
+
+.bank-hero.empty .bank-hero-label,
+.bank-hero.empty .bank-hero-sub {
+  color: var(--color-text-dim);
+}
+
+.bank-hero.empty .bank-hero-amount {
+  color: var(--color-text-dim);
+  text-shadow: none;
+}
+
+.bank-hero.empty:hover {
+  opacity: 0.9;
+  background: var(--color-surface-hover);
+}
+
 /* ===== RANK MOVEMENT ===== */
 .rank-mov {
   display: inline-block;

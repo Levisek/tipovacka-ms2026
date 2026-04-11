@@ -10,14 +10,16 @@ Postavená pro partu kamarádů "Pískové doly" — navazuje na tradici z MS 20
 ### Tipovačka
 - **Tipování zápasů** s deadlinem 1,5 hodiny před prvním zápasem hracího dne
 - **Zamykání tipů** po odeslání s možností úprav (tlačítko ✎) až do deadline
-- **Live odpočet** do uzavření tipovacího okénka, poslední hodinu pulzuje oranžově
-- **Tip na celkového vítěze** turnaje — samostatný bank s carry-overem 700 Kč z Eura 2024
+- **Live odpočet** do uzavření tipovacího okénka, poslední hodinu celý banner červený a pulzuje
+- **Bank hero box** s glow/shimmer animací když je v banku něco, mdlý styl když je prázdný
+- **Tip na celkového vítěze** turnaje — samostatný bank s přenosem 700 Kč z Eura 2024
 - **Tipy ostatních hráčů** viditelné po deadline NEBO po zadání výsledku zápasu
 - **Live updates** přes Firebase real-time listenery — když někdo tipne, ostatní to vidí okamžitě
 - **Indikace vypadnutých tipů** během live zápasu — pokud aktuální skóre přesahuje tip, je přeškrtnuté
+- **Highlight pro Česko** 🇨🇿 — naše zápasy mají modrý border, gradient pozadí a zlaté jméno
 
 ### Žebříček (live)
-- **Dominantní bank box** — aktuální nevyhraný bank zápasu
+- **Dominantní bank box** se zlatým glow efektem (sjednoceno s tipovačkou)
 - **Pohyby v tabulce** — šipky ▲ nahoru / ▼ dolů podle změn pořadí (snapshot v localStorage)
 - **Dvě tabulky**: Správné tipy + Finanční bilance
 - **Bank z neúspěšných tipů** ze skupin se přenáší do vyřazovací fáze
@@ -51,7 +53,10 @@ Postavená pro partu kamarádů "Pískové doly" — navazuje na tradici z MS 20
 - **Stáhnout výsledky z API** (football-data.org)
 - **Tipy hráčů** — všechny tipy z Firebase, automatické načtení
 - **Zadat výsledek ručně** — výběr zápasu z dropdown + skóre
-- Heslo: `2026`
+- **Naplnit testovací tipy** — pro testování (přidává tipy, nemaže nic)
+- **Vyčistit lokální cache** — smaže lokálně uložené výsledky a snapshot žebříčku
+- Heslo: viz `src/views/admin.js` (nepsat veřejně)
+- **Žádná destruktivní operace** v UI — nikdo nemůže nic smazat, jen přepisovat tipy do deadline
 
 ## 💰 Pravidla sázení (MS 2026)
 
