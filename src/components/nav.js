@@ -18,7 +18,7 @@ export function renderNav() {
       </ul>
       <div class="nav-player" id="nav-player">
         ${player
-          ? `<span class="player-badge">${player}</span>`
+          ? `<button class="player-badge" id="player-badge" title="Přepnout hráče">${player} <span style="opacity: 0.6; font-size: 11px;">▾</span></button>`
           : `<button class="btn-select-player" id="btn-select-player">Vyber hráče</button>`
         }
       </div>
@@ -93,10 +93,18 @@ export function initNavEvents() {
     }, 150)
   })
 
-  // Player select button
+  // Player select button (když není vybraný hráč)
   const selectBtn = document.getElementById('btn-select-player')
   if (selectBtn) {
     selectBtn.addEventListener('click', () => {
+      document.getElementById('player-modal').classList.add('visible')
+    })
+  }
+
+  // Player badge — klik otevře modal pro přepnutí hráče
+  const playerBadge = document.getElementById('player-badge')
+  if (playerBadge) {
+    playerBadge.addEventListener('click', () => {
       document.getElementById('player-modal').classList.add('visible')
     })
   }

@@ -22,15 +22,17 @@ export function clearPlayer() {
 }
 
 export function renderPlayerModal() {
+  const current = getPlayerName()
   return `
     <div class="modal-overlay" id="player-modal">
       <div class="modal">
-        <h2>Kdo jsi?</h2>
+        <h2>${current ? 'Přepnout hráče' : 'Kdo jsi?'}</h2>
         <div class="player-grid">
           ${PLAYERS.map(name => `
-            <button class="player-option" data-player="${name}">${name}</button>
+            <button class="player-option ${name === current ? 'current' : ''}" data-player="${name}">${name}</button>
           `).join('')}
         </div>
+        ${current ? '<button class="modal-close" id="player-modal-close">Zavřít</button>' : ''}
       </div>
     </div>
   `
@@ -45,9 +47,22 @@ export function initPlayerModal(onSelect) {
       const name = btn.dataset.player
       setPlayerName(name)
       modal.classList.remove('visible')
+      // Překresli modal aby měl správný stav (current player)
+      const newModal = renderPlayerModal()
+      modal.outerHTML = newModal
+      // Re-init pro nový modal
+      initPlayerModal(onSelect)
       if (onSelect) onSelect(name)
     })
   })
+
+  // Zavírací tlačítko (jen když už je vybraný hráč)
+  const closeBtn = document.getElementById('player-modal-close')
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      modal.classList.remove('visible')
+    })
+  }
 
   // Zavřít kliknutím na overlay
   modal.addEventListener('click', e => {
