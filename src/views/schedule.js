@@ -119,9 +119,9 @@ function renderKnockoutCard(match) {
         <span>${formatDateShort(match.date)} · ${match.kickoff}</span>
         <span class="kc-city">${match.city}</span>
       </div>
-      <div class="kc-team">${flagImg(home.flag, 20)} ${match.home}${match.home === HOME_TEAM ? ' 🇨🇿' : ''}</div>
+      <div class="kc-team">${flagImg(home.flag, 20)} ${match.home}</div>
       <div class="kc-vs">${hasResult ? `${match.homeScore} : ${match.awayScore}` : 'vs'}</div>
-      <div class="kc-team">${flagImg(away.flag, 20)} ${match.away}${match.away === HOME_TEAM ? ' 🇨🇿' : ''}</div>
+      <div class="kc-team">${flagImg(away.flag, 20)} ${match.away}</div>
     </a>
   `
 }

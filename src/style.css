@@ -2090,10 +2090,6 @@ details[open] > .tip-section-toggle::before {
     var(--color-surface) 100%);
 }
 
-.match-card.our-team .group-label::before {
-  content: '🇨🇿 ';
-}
-
 .match-team.our-team-side .name {
   color: var(--color-gold);
   font-weight: 700;

@@ -114,11 +114,11 @@ export function renderMatchCard(match, options = {}) {
       <div class="match-teams">
         <div class="match-team home${isHomeOurs ? ' our-team-side' : ''}">
           <span class="flag">${flagImg(home.flag)}</span>
-          <span class="name">${match.home}${isHomeOurs ? ' 🇨🇿' : ''}</span>
+          <span class="name">${match.home}</span>
         </div>
         ${scoreHtml}
         <div class="match-team away${isAwayOurs ? ' our-team-side' : ''}">
-          <span class="name">${isAwayOurs ? '🇨🇿 ' : ''}${match.away}</span>
+          <span class="name">${match.away}</span>
           <span class="flag">${flagImg(away.flag)}</span>
         </div>
       </div>
