@@ -1,0 +1,50 @@
+# ===========================================================================
+# Tipovačka MS 2026 — Apache / ATS cache rules
+# ===========================================================================
+# Řeší problém s ATS (Apache Traffic Server) edge cache:
+# - `Vary: User-Agent` dělal zvlášť cache entry per prohlížeč → občas
+#   jedna z nich zkorumpovala a brandí desítky uživatelů najednou.
+# - hashované assety se mají cachovat immutable, HTML nikdy.
+# ===========================================================================
+
+<IfModule mod_headers.c>
+    # --- Hashované assety (JS/CSS/fonty) ---
+    # Soubory v /assets/ mají v názvu content-hash (Vite),
+    # takže se můžou cachovat navždy. Žádný Vary.
+    <FilesMatch "\.(js|mjs|css|woff2?|ttf|otf|eot)$">
+        Header unset Vary
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+    # --- Obrázky / ikony ---
+    <FilesMatch "\.(png|jpg|jpeg|gif|svg|webp|ico)$">
+        Header unset Vary
+        Header set Cache-Control "public, max-age=2592000"
+    </FilesMatch>
+
+    # --- index.html ---
+    # HTML musí mít vždy čerstvé, jinak uživatel drží staré odkazy
+    # na neexistující chunky.
+    <FilesMatch "\.(html)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </FilesMatch>
+</IfModule>
+
+# --- SPA routing fallback (hash router → není kritické, ale neškodí) ---
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /tipovacka/
+
+    # Existující soubory/složky nech projít
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # API proxy nech projít
+    RewriteRule ^api/ - [L]
+
+    # Všechno ostatní → index.html
+    RewriteRule ^ index.html [L]
+</IfModule>

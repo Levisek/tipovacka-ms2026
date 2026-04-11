@@ -156,7 +156,7 @@ npm run build    # produkční build do dist/
 
 ## 📦 Deployment
 
-Build se nahrává přes FTP na **levinger.cz/tipovacka/**.
+Build se nahrává přes FTP na **levinger.cz/tipovacka/** (Wedos hosting).
 
 ```bash
 npm run build
@@ -165,17 +165,81 @@ npm run build
 # (Vite chunky musí být v synchronizaci, jinak se rozbije import grafu)
 ```
 
-`vite.config.js` má nastavený `base: '/tipovacka/'` aby cesty fungovaly v podadresáři.
-Hash router (`#/path`) zajišťuje, že se nemusí konfigurovat Apache rewrite.
+### Pořadí uploadu (atomicita)
+1. Nejdřív všechny `assets/*.js`, `assets/*.css`, obrázky a `api/wc.php`
+2. Potom `.htaccess`
+3. **Jako poslední** `index.html` — jinak může uživatel stáhnout HTML
+   odkazující na ještě nenahraný JS bundle a dostane blank stránku
 
-V kořenu domény je `.htaccess` s redirectem `/` → `/tipovacka/`.
+### Vite config
+`vite.config.js` má nastavený `base: '/tipovacka/'` aby cesty fungovaly
+v podadresáři. Hash router (`#/path`) zajišťuje, že se nemusí konfigurovat
+Apache rewrite pro SPA routing. V kořenu domény je `.htaccess` s redirectem
+`/` → `/tipovacka/`.
+
+### `public/.htaccess` — cache pravidla pro Wedos ATS
+Wedos má před webem **Apache Traffic Server (ATS)** edge cache. Bez tvrdě
+nastavených pravidel posílá `Vary: User-Agent` a drží **samostatnou cache
+entry per každý unikátní prohlížeč** — což je nebezpečné, protože jediná
+corruptnutá entry zablokne všechny uživatele se stejným UA
+(viz [Incident 2026-04-11](#-incident-2026-04-11--ats-cache-vary-user-agent)
+níže).
+
+`public/.htaccess` proto pro `/assets/*` dělá:
+- `Header unset Vary` — žádný split cache per UA
+- `Cache-Control: public, max-age=31536000, immutable` — assety jsou
+  hash-named, můžou se cachovat navždy
+
+Pro `*.html` nastavuje `Cache-Control: no-cache, no-store, must-revalidate`,
+takže prohlížeč si HTML vždy revaliduje a nikdy nedrží staré odkazy
+na neexistující chunky.
+
+Vite automaticky kopíruje `public/.htaccess` do `dist/.htaccess`, takže při
+standardním FTP uploadu obsahu `dist/` se nahraje i on. **FileZilla defaultně
+skrývá tečkové soubory** — zapni „Zobrazit skryté soubory" v menu Server.
 
 ### CORS proxy
 `public/api/wc.php` je PHP proxy pro football-data.org API. Bez něj by browser nemohl
 volat API kvůli CORS (API dovoluje jen `localhost`). Proxy:
-- Volá API server-side s skrytým API klíčem
+- Volá API server-side se skrytým API klíčem
 - Vrací JSON s `Access-Control-Allow-Origin: *`
 - Cache v `/tmp/` na 3 minuty (šetří API kvótu)
+
+## 🚨 Incident 2026-04-11 — ATS cache + Vary: User-Agent
+
+**Symptomy:** někteří uživatelé (hlavně první návštěvy na mobilu) viděli
+blank stránku, nebo jen rozpis jmen bez reakce na kliknutí a v tabu se
+donekonečna točil loading indicator. Jiní měli web bez problému.
+
+**Root cause:** Wedos ATS edge cache standardně posílá
+`Vary: User-Agent, Accept-Encoding` → drží samostatnou cached copy JS bundlu
+per každý unikátní User-Agent string. Jedna z těch copies `index-r27-H9mZ.js`
+se uložila **truncated** (pravděpodobně ATS vnitřní bug / network blip při
+cache populaci) a od té chvíle všichni uživatelé se stejným UA dostávali
+useklý JS → `Uncaught SyntaxError: Unexpected end of input` → nic nefungovalo.
+
+**Fix (permanentní):**
+1. Přidán `public/.htaccess` s `Header unset Vary` na všechny assety a
+   `Cache-Control: no-cache` na HTML (viz sekce Deployment výše).
+2. Přidán build marker `console.log('[tipovacka] build YYYY-MM-DD-x')`
+   do `src/main.js` — umožňuje kdykoli vynutit nový hash bundlu rebuildem
+   změnou stringu (ATS nemá v cache nic nového → stáhne si čerstvou verzi
+   z origin).
+
+**Jak ověřit že je fix aktivní:**
+```bash
+curl -sI https://levinger.cz/tipovacka/assets/index-XXXXX.js | grep -E 'Vary|Cache-Control'
+# Musí být:
+#   Cache-Control: public, max-age=31536000, immutable
+#   (a žádný Vary header)
+```
+
+**Quick-unblock postup pro případné příští cache korupce:**
+1. Změnit build marker string v `src/main.js` (datum + písmeno)
+2. `npm run build` — Vite vygeneruje nový hash v názvu JS bundlu
+3. FTP upload celého `dist/` (atomicky, v pořadí: assets → .htaccess → index.html)
+4. Postižené uživatele nechat reload (dostanou nový HTML → nový JS URL, ATS
+   ho ještě nikdy neviděl → čerstvé stažení z origin)
 
 ## 🎨 Témata
 
