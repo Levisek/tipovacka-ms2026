@@ -4,7 +4,7 @@ import { formatDateShort } from '../utils/date.js'
 import { getAllBets } from '../services/betService.js'
 import { getTeam } from '../config/teams.js'
 import * as store from '../services/matchStore.js'
-import { placeBet } from '../services/betService.js'
+import { placeBet, deleteAllBetsForMatch } from '../services/betService.js'
 
 // Pravidla MS 2026 (sázka vždy za zápas)
 const GROUP_BET = 20    // Kč za zápas
@@ -119,9 +119,12 @@ export function renderAdmin(container) {
     <div class="admin-section">
       <h2>Testovací data</h2>
       <p style="color: var(--color-text-dim); margin-bottom: 12px; font-size: 13px;">
-        Vyplní fiktivní tipy všech 7 hráčů na první zápas turnaje.
+        Vyplní/smaže fiktivní tipy všech hráčů na první zápas turnaje.
       </p>
-      <button class="btn-admin" id="btn-seed-bets">Naplnit testovací tipy</button>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="btn-admin" id="btn-seed-bets">Naplnit testovací tipy</button>
+        <button class="btn-admin" id="btn-clear-bets" style="border-color: var(--color-locked); color: var(--color-locked);">Smazat tipy z 1. zápasu</button>
+      </div>
       <div id="seed-bets-status" style="margin-top: 8px;"></div>
     </div>
 
@@ -238,6 +241,31 @@ export function renderAdmin(container) {
   }
   document.getElementById('btn-load-bets').addEventListener('click', loadBets)
   loadBets() // automaticky při otevření
+
+  // Smazat testovací tipy z 1. zápasu
+  document.getElementById('btn-clear-bets').addEventListener('click', async () => {
+    const status = document.getElementById('seed-bets-status')
+    const allMatches = [...store.getAllMatches()]
+      .sort((a, b) => (a.date || '').localeCompare(b.date || '') || a.kickoff.localeCompare(b.kickoff))
+    const firstMatch = allMatches[0]
+    if (!firstMatch) {
+      status.textContent = '✗ Žádný zápas nenalezen'
+      status.style.color = 'var(--color-locked)'
+      return
+    }
+    if (!confirm(`Opravdu smazat všechny tipy na zápas ${firstMatch.home} vs ${firstMatch.away}?`)) return
+    status.textContent = 'Mažu tipy…'
+    status.style.color = 'var(--color-text-dim)'
+    try {
+      const count = await deleteAllBetsForMatch(firstMatch.id)
+      status.textContent = `✓ Smazáno ${count} tipů z ${firstMatch.home} vs ${firstMatch.away}`
+      status.style.color = 'var(--color-open)'
+      loadBets()
+    } catch (e) {
+      status.textContent = '✗ Chyba: ' + e.message
+      status.style.color = 'var(--color-locked)'
+    }
+  })
 
   // Naplnit testovací tipy na první zápas
   document.getElementById('btn-seed-bets').addEventListener('click', async () => {

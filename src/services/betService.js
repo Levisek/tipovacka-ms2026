@@ -1,6 +1,19 @@
 import { db } from '../config/firebase.js'
-import { collection, doc, getDoc, getDocs, setDoc, onSnapshot } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, setDoc, deleteDoc, onSnapshot } from 'firebase/firestore'
 import { isPastDeadline } from '../utils/date.js'
+
+/**
+ * Smaže všechny tipy na konkrétní zápas
+ */
+export async function deleteAllBetsForMatch(matchId) {
+  const snap = await getDocs(collection(db, 'matches', matchId, 'bets'))
+  const deletes = []
+  snap.forEach(d => {
+    deletes.push(deleteDoc(doc(db, 'matches', matchId, 'bets', d.id)))
+  })
+  await Promise.all(deletes)
+  return deletes.length
+}
 
 /**
  * Uloží tip hráče na zápas
