@@ -1,7 +1,7 @@
 import { STAGE_NAMES } from '../config/schedule.js'
 import * as store from '../services/matchStore.js'
 import { GROUPS, getTeam, flagImg, HOME_TEAM } from '../config/teams.js'
-import { formatDateShort } from '../utils/date.js'
+import { formatDateShort, formatDateFull } from '../utils/date.js'
 
 export function renderSchedule(container) {
   const tabs = [

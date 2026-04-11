@@ -52,13 +52,20 @@ export function renderDashboard(container) {
     }
   }
 
-  // Seskup po dnech
+  // Seřaď current zápasy chronologicky (podle kickoff)
+  current.sort((a, b) => a.kickoff.localeCompare(b.kickoff))
+
+  // Seskup po dnech a uvnitř každého dne seřaď chronologicky
   const groupByDate = (arr) => {
     const map = new Map()
     arr.forEach(m => {
       if (!map.has(m.date)) map.set(m.date, [])
       map.get(m.date).push(m)
     })
+    // Seřaď zápasy v každém dni podle kickoff
+    for (const matches of map.values()) {
+      matches.sort((a, b) => a.kickoff.localeCompare(b.kickoff))
+    }
     return map
   }
 
