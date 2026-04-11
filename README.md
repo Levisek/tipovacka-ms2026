@@ -94,36 +94,42 @@ src/
 ├── style.css            # Globální styly + dark mode
 │
 ├── config/
+│   ├── constants.js     # Centrální konstanty (PIN, klíče, intervaly, …)
 │   ├── firebase.js      # Firebase config
-│   ├── schedule.js      # Rozpis 104 zápasů MS 2026
-│   ├── teams.js         # 48 týmů s vlajkami
+│   ├── schedule.js      # Rozpis 104 zápasů MS 2026 (placeholder, přepíše se z API)
+│   ├── teams.js         # 48 týmů s vlajkami + HOME_TEAM = 'Česko'
 │   ├── archive2022.json # Data z MS 2022
 │   └── archiveEuro2024.json
 │
 ├── services/
-│   ├── auth.js              # Player select (localStorage)
-│   ├── betService.js        # Firebase CRUD pro tipy
-│   ├── matchStore.js        # Centrální store výsledků zápasů
-│   ├── resultService.js     # Polling football-data.org API
-│   └── standingsService.js  # Live výpočet žebříčku s carry-over
+│   ├── auth.js                # Player select (localStorage)
+│   ├── betService.js          # Firebase CRUD pro tipy (read-only deletes)
+│   ├── matchStore.js          # Centrální store výsledků + schedule overrides
+│   ├── resultService.js       # API klient (přes PHP proxy v produkci)
+│   ├── standingsService.js    # Live výpočet žebříčku s carry-over
+│   └── playerStatsService.js  # Statistiky pro profil hráče
 │
 ├── components/
 │   ├── nav.js           # Navigace + hamburger menu
-│   ├── matchCard.js     # Karta zápasu s tipem
+│   ├── matchCard.js     # Karta zápasu s tipem (highlight Česko)
 │   ├── betForm.js       # Formulář pro tipnutí + edit handler
 │   ├── countdown.js     # Odpočet do deadline
-│   ├── bankTicker.js    # Bank ticker v dashboardu
 │   └── winnerBet.js     # Tip na vítěze (form / lock)
 │
 └── views/
-    ├── dashboard.js     # Hlavní stránka — tipovačka
-    ├── standings.js     # Live žebříček
-    ├── winner.js        # Tip na vítěze (samostatný tab)
-    ├── schedule.js      # Rozpis zápasů
-    ├── rules.js         # Pravidla
-    ├── archive.js       # Archiv MS 2022 + Euro 2024
-    ├── admin.js         # Admin panel
-    └── matchDetail.js   # Detail zápasu
+    ├── dashboard.js       # Hlavní stránka — tipovačka
+    ├── standings.js       # Live žebříček s pohyby ▲▼
+    ├── winner.js          # Tip na vítěze (samostatný tab)
+    ├── schedule.js        # Rozpis zápasů po skupinách
+    ├── rules.js           # Pravidla
+    ├── archive.js         # Archiv MS 2022 + Euro 2024
+    ├── admin.js           # Admin panel
+    ├── matchDetail.js     # Detail zápasu
+    └── playerProfile.js   # Profil hráče se statistikami
+
+public/
+└── api/
+    └── wc.php           # PHP proxy pro football-data.org API (CORS + cache)
 ```
 
 ## 🔥 Firestore schéma
@@ -154,13 +160,22 @@ Build se nahrává přes FTP na **levinger.cz/tipovacka/**.
 
 ```bash
 npm run build
-# Pak ručně FTP upload obsahu dist/ do /www/domains/levinger.cz/tipovacka/
+# Pak ručně FTP upload CELÉHO obsahu dist/ do /www/domains/levinger.cz/tipovacka/
+# DŮLEŽITÉ: vždy nahrát všechny soubory z dist/assets/, ne jen některé
+# (Vite chunky musí být v synchronizaci, jinak se rozbije import grafu)
 ```
 
 `vite.config.js` má nastavený `base: '/tipovacka/'` aby cesty fungovaly v podadresáři.
 Hash router (`#/path`) zajišťuje, že se nemusí konfigurovat Apache rewrite.
 
 V kořenu domény je `.htaccess` s redirectem `/` → `/tipovacka/`.
+
+### CORS proxy
+`public/api/wc.php` je PHP proxy pro football-data.org API. Bez něj by browser nemohl
+volat API kvůli CORS (API dovoluje jen `localhost`). Proxy:
+- Volá API server-side s skrytým API klíčem
+- Vrací JSON s `Access-Control-Allow-Origin: *`
+- Cache v `/tmp/` na 3 minuty (šetří API kvótu)
 
 ## 🎨 Témata
 
@@ -172,7 +187,18 @@ V kořenu domény je `.htaccess` s redirectem `/` → `/tipovacka/`.
 
 - Žádný registrační systém — hráč si vybere své jméno z přednastaveného seznamu
 - Jméno se uloží do localStorage a používá jako identifikátor pro Firebase
-- Admin je chráněný PIN heslem `2026` (sessionStorage)
+- Klikatelný badge s jménem v navigaci → modal pro přepnutí hráče
+- Admin je chráněný PIN (viz `src/config/constants.js` → `ADMIN_PIN`)
+
+## 👤 Profil hráče
+
+Klik na jméno hráče v žebříčku, archivu nebo tipech na vítěze otevře `/#/player/Jmeno`:
+- Aktuální MS 2026 statistiky (pozice, bilance, úspěšnost, parťák do banku)
+- Tip na vítěze s 🇨🇿 highlighten
+- Historie z MS 2022 + Euro 2024 (počet tipů, výhry)
+- 💀 Nejdelší šňůra netrefení (chronologicky přes všechny turnaje)
+- 🎯 Oblíbený výsledek
+- **Live updates** — sleduje matchStore změny + auto-refetch každých 30s
 
 ## 📊 Archiv tipovaček
 
