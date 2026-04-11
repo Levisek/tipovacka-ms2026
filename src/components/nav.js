@@ -5,7 +5,7 @@ export function renderNav() {
   return `
     <nav role="navigation" aria-label="Hlavní navigace">
       <a href="#/" class="nav-brand">
-        <span class="nav-title">Pískové doly 🇨🇿<span class="nav-subtitle">Tipovačka MS 2026</span></span>
+        <span class="nav-title">Pískové doly<span class="nav-subtitle">Tipovačka MS 2026</span></span>
       </a>
       <ul class="nav-links" id="navLinks">
         <li><a href="#/">Tipovačka</a></li>

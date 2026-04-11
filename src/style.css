@@ -62,18 +62,25 @@ body {
   overflow-x: hidden;
 }
 
-/* FIFA 2026 pozadí */
+/* FIFA 2026 pozadí — fixed s hardware accelerací aby nepoSkakovalo
+   na mobilech při skrývání address baru */
 body::before {
   content: '';
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
+  width: 100vw;
+  height: 100vh;
   z-index: 0;
   pointer-events: none;
   background: url('/fifa-logo-alt.png') center center / 70% auto no-repeat;
   opacity: 0.07;
+  /* Hardware acceleration → vlastní compositing layer, nepřekresluje se při scrollu */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
 }
 
 #app {
