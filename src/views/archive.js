@@ -182,7 +182,7 @@ function renderTournament(content, data, title) {
             ${tipTable.map((p, i) => `
               <tr>
                 <td class="rank rank-${i + 1}">${i + 1}.</td>
-                <td style="font-weight: 600; color: var(--color-text);">${p.name}</td>
+                <td><a href="#/player/${encodeURIComponent(p.name)}" class="player-link">${p.name}</a></td>
                 <td>${p.groups}</td>
                 <td>${p.ko}</td>
                 <td style="font-weight: 700; color: var(--color-text);">${p.total}</td>
@@ -219,7 +219,7 @@ function renderTournament(content, data, title) {
             ${cashTable.map((p, i) => `
               <tr>
                 <td class="rank rank-${i + 1}">${i + 1}.</td>
-                <td style="font-weight: 600; color: var(--color-text);">${p.name}</td>
+                <td><a href="#/player/${encodeURIComponent(p.name)}" class="player-link">${p.name}</a></td>
                 <td style="color: var(--color-gold);">${p.groupWin} Kč</td>
                 <td style="color: var(--color-gold);">${p.koWin} Kč</td>
                 <td style="color: var(--color-text-dim);">${p.totalDeposit} Kč</td>

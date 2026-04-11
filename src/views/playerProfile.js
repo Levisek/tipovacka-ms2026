@@ -1,18 +1,26 @@
 import { computePlayerStats } from '../services/playerStatsService.js'
 import { getPlayers } from '../services/auth.js'
 import { HOME_TEAM } from '../config/teams.js'
+import archive2022 from '../config/archive2022.json'
+import archiveEuro2024 from '../config/archiveEuro2024.json'
 
 export async function renderPlayerProfile(container, params) {
   const playerName = decodeURIComponent(params.name || '')
 
-  // Validace
-  if (!getPlayers().includes(playerName)) {
+  // Validace — hráč musí existovat alespoň v jednom z archivů nebo aktuálním seznamu
+  const allKnownPlayers = new Set([
+    ...getPlayers(),
+    ...(archive2022.players || []),
+    ...(archiveEuro2024.players || []),
+  ])
+  if (!allKnownPlayers.has(playerName)) {
     container.innerHTML = `
       <div class="section-header"><h1>Hráč nenalezen</h1></div>
       <p style="color: var(--color-text-dim);">Hráč "${playerName}" neexistuje. <a href="#/standings">Zpět na žebříček</a></p>
     `
     return
   }
+  const isCurrentPlayer = getPlayers().includes(playerName)
 
   container.innerHTML = `
     <div class="section-header">
@@ -43,6 +51,7 @@ export async function renderPlayerProfile(container, params) {
     </div>
 
     <!-- AKTUÁLNÍ MS 2026 -->
+    ${isCurrentPlayer ? `
     <div class="profile-section">
       <h2>🏆 MS 2026 — aktuální</h2>
       <div class="profile-stats-grid">
@@ -89,6 +98,13 @@ export async function renderPlayerProfile(container, params) {
         </p>
       ` : ''}
     </div>
+    ` : `
+    <div class="profile-section">
+      <p style="color: var(--color-text-dim); text-align: center; padding: 12px;">
+        Tento hráč se MS 2026 neúčastní — historické statistiky níže.
+      </p>
+    </div>
+    `}
 
     <!-- HISTORIE -->
     <div class="profile-section">
