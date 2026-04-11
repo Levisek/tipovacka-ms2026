@@ -1,7 +1,6 @@
 import * as store from '../services/matchStore.js'
 import { renderMatchCard } from '../components/matchCard.js'
 import { initBetForms } from '../components/betForm.js'
-import { renderBankTicker } from '../components/bankTicker.js'
 import { renderWinnerBet, initWinnerBet } from '../components/winnerBet.js'
 import { getPlayerName } from '../services/auth.js'
 import { formatDateFull, getDeadlineTime, isPastDeadline } from '../utils/date.js'
@@ -78,7 +77,11 @@ export function renderDashboard(container) {
     <div class="section-header">
       <h1>Tipovačka</h1>
     </div>
-    ${renderBankTicker(_currentBank)}
+    <a href="#/standings" class="bank-hero" style="text-decoration: none; display: block;">
+      <div class="bank-hero-label">💰 Aktuální bank</div>
+      <div class="bank-hero-amount">${Math.round(_currentBank)} Kč</div>
+      <div class="bank-hero-sub">čeká na další správný tip · klikni pro žebříček</div>
+    </a>
     ${currentDay && !isPastDeadline(currentDay) ? `
       <div class="deadline-banner" id="deadline-banner">
         <span class="deadline-banner-icon">⏱</span>
