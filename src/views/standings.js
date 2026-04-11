@@ -115,7 +115,7 @@ export async function renderStandings(container) {
                 <tr>
                   <td class="rank rank-${i + 1}">${i + 1}.</td>
                   <td>${renderMovement(p.name)}</td>
-                  <td style="font-weight: 600; color: var(--color-text);">${p.name}</td>
+                  <td><a href="#/player/${encodeURIComponent(p.name)}" class="player-link">${p.name}</a></td>
                   <td>${p.correctGroup}</td>
                   <td>${p.correctKo}</td>
                   <td style="font-weight: 700; color: var(--color-text);">${p.correctTips}</td>
@@ -148,7 +148,7 @@ export async function renderStandings(container) {
                 <tr>
                   <td class="rank rank-${i + 1}">${i + 1}.</td>
                   <td>${renderMovement(p.name)}</td>
-                  <td style="font-weight: 600; color: var(--color-text);">${p.name}</td>
+                  <td><a href="#/player/${encodeURIComponent(p.name)}" class="player-link">${p.name}</a></td>
                   <td style="color: var(--color-gold);">${formatKc(p.groupWin)}</td>
                   <td style="color: var(--color-gold);">${formatKc(p.koWin)}</td>
                   <td style="color: var(--color-text-dim);">${formatKc(p.deposit)}</td>
@@ -188,11 +188,11 @@ function renderPodiumCard(player, rank) {
   const medals = { 1: '🥇', 2: '🥈', 3: '🥉' }
 
   return `
-    <div class="podium-card podium-${rank}">
+    <a class="podium-card podium-${rank}" href="#/player/${encodeURIComponent(player.name)}">
       <div class="podium-medal">${medals[rank]}</div>
       <div class="podium-name">${player.name}</div>
       <div class="podium-balance">${player.balance > 0 ? '+' : ''}${Math.round(player.balance)} Kč</div>
       <div class="podium-bar" style="height: ${heights[rank]}"></div>
-    </div>
+    </a>
   `
 }

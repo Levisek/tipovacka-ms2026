@@ -79,7 +79,7 @@ export async function renderWinner(container) {
               const isMine = p === player
               return `
                 <tr class="${isEliminated ? 'eliminated' : ''} ${isMine ? 'mine' : ''}">
-                  <td><strong>${p}</strong>${isMine ? ' <span style="color: var(--color-text-dim); font-size: 11px;">(ty)</span>' : ''}</td>
+                  <td><a href="#/player/${encodeURIComponent(p)}" class="player-link"><strong>${p}</strong></a>${isMine ? ' <span style="color: var(--color-text-dim); font-size: 11px;">(ty)</span>' : ''}</td>
                   <td>${team}</td>
                   <td>${statusHtml}</td>
                 </tr>

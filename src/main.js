@@ -10,6 +10,7 @@ import { renderArchive } from './views/archive.js'
 import { renderAdmin } from './views/admin.js'
 import { renderRules } from './views/rules.js'
 import { renderWinner } from './views/winner.js'
+import { renderPlayerProfile } from './views/playerProfile.js'
 
 // Registrace rout
 route('/', renderDashboard)
@@ -20,6 +21,7 @@ route('/archive', renderArchive)
 route('/admin', renderAdmin)
 route('/rules', renderRules)
 route('/winner', renderWinner)
+route('/player/:name', renderPlayerProfile)
 
 // Render app shell
 const app = document.getElementById('app')
