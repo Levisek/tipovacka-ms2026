@@ -39,6 +39,7 @@ function matchRoute(hash) {
   return null
 }
 
+let _routeToken = 0  // monotonní ID — chrání před stale async cleanupem
 function handleRoute() {
   const rawHash = window.location.hash.slice(1) || '/'
   const hash = rawHash.split('?')[0] // Odstraň query params pro matching
@@ -50,16 +51,30 @@ function handleRoute() {
     currentCleanup = null
   }
 
+  // Každá nová navigace dostane vyšší token. Pokud async handler doběhne
+  // POZDĚJI než další navigace, nesmí přepsat currentCleanup novější routy
+  // — jinak zaleakuje (např. setInterval z playerProfile pokračuje na pozadí
+  // i po návratu na dashboard, viz incident 2026-04-11).
+  const myToken = ++_routeToken
+
   const result = matchRoute(hash)
   if (result) {
     const maybePromise = result.handler(container, result.params)
     // Podpora async handlerů
     if (maybePromise && typeof maybePromise.then === 'function') {
       maybePromise.then(cleanup => {
-        if (typeof cleanup === 'function') currentCleanup = cleanup
+        if (typeof cleanup !== 'function') return
+        if (myToken === _routeToken) {
+          currentCleanup = cleanup  // pořád jsme na téhle routě
+        } else {
+          // Mezitím přišla novější navigace — rovnou ukliď, ať netečou listenery
+          try { cleanup() } catch (e) {}
+        }
       }).catch(e => {
         console.error('Route error:', e)
-        container.innerHTML = '<h2>Chyba</h2><p>Něco se pokazilo.</p>'
+        if (myToken === _routeToken) {
+          container.innerHTML = '<h2>Chyba</h2><p>Něco se pokazilo.</p>'
+        }
       })
     } else if (typeof maybePromise === 'function') {
       currentCleanup = maybePromise

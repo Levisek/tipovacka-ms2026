@@ -241,6 +241,89 @@ curl -sI https://levinger.cz/tipovacka/assets/index-XXXXX.js | grep -E 'Vary|Cac
 4. Postižené uživatele nechat reload (dostanou nový HTML → nový JS URL, ATS
    ho ještě nikdy neviděl → čerstvé stažení z origin)
 
+### Druhá vlna — chunk version mismatch (Vite multi-chunk gotcha)
+
+Po nasazení `.htaccess` fixu se objevil druhý problém: jeden uživatel měl
+
+```
+Uncaught SyntaxError: The requested module './schedule-D5N2uG5C.js'
+does not provide an export named 'o'
+```
+
+**Příčina:** Vite content-hash chunku je odvozený ze zdrojového kódu chunku,
+ale **jména exportů jsou minified a mangling závisí na tom, co main bundle
+importuje**. Když rebuildíš main bundle, mangling exportů ve sdíleném chunku
+se může přerovnat — ale Vite mu dá stejný filename hash, protože *zdroj* se
+nezměnil. User měl v browser cache (jako `immutable`) starou verzi `schedule-D5N2uG5C.js`
+se starým manglingem. Nový main bundle vyžadoval export `o`, cached chunk
+exportoval jen `a, c, i, l, n, r, s, t, u`. → JS error → blank stránka.
+
+**Fix:** `vite.config.js` → `rollupOptions.output.manualChunks: () => 'index'`.
+Vše se sloučí do jediného `.js` souboru, takže žádný cross-chunk version
+mismatch už není ani teoreticky možný. Bundle je o ~13 kB větší (376 kB
+místo 363 + 13 kB), ale pro malou SPA je to čistší a robustnější.
+**NEPŘIDÁVAT zpět chunk splitting bez velmi dobrého důvodu.**
+
+### Třetí vlna — freeze telefonu při startu
+
+Po fixu chunků se objevil další problém: po zobrazení modal okna s výběrem
+jména telefon zamrzl ~1 sekundu poté, co se objevila jména. Tři příčiny
+najednou:
+
+1. **Dvojí start routeru** — `main.js` volal `startRouter()` jednou
+   bezpodmínečně a podruhé v callbacku po výběru hráče. Při startu bez
+   vybraného hráče se tak **dashboard renderoval na pozadí pod modal oknem**
+   a střílel 313+ Firestore dotazů (104× bank výpočet + 208× bet loady +
+   1× winner bets) paralelně s tím, jak uživatel klikal na svoje jméno.
+
+2. **Synchronní lavina Firebase volání po renderu** — `dashboard.js` po
+   každém renderu okamžitě spouštěl 4 load funkce naráz (`loadBets`,
+   `loadBank`, `loadWinner`, live snapshot listenery). Initial render
+   72 karet skupin + KO byl sám o sobě tučný kus práce; přidat hned na to
+   stovky network callbacků a JSON.stringify diffů → main thread block →
+   freeze.
+
+3. **Router race condition** — `playerProfile.js` má 30s `setInterval`
+   který se cleanupuje až router zavolá vrácenou cleanup funkci. Cleanup
+   se ale registroval v `.then()` async handleru — pokud uživatel navigoval
+   pryč **dřív než await dokončil**, novější routa už měla svůj cleanup
+   nastavený, a po doběhnutí starého handleru se přepsal cleanupem starého
+   playerProfile. Výsledek: dashboardové listenery zaleakované, plus
+   playerProfile interval pumpoval na pozadí navždy → 104 Firestore dotazů
+   každých 30 sekund navíc.
+
+**Fixy:**
+- `main.js` — `startRouter()` se volá jen pokud `getPlayerName()` vrací
+  hráče. Bez hráče se ukáže modal a router běží až po výběru.
+- `dashboard.js` — load funkce + live listenery zabaleny v `setTimeout(fn, 500)`,
+  aby se nejdřív stihl dokončit initial render dashboardu.
+- `router.js` — token-based protection: každá navigace dostane monotónní
+  ID a stale async handler nemůže přepsat `currentCleanup` novější routy.
+  Pokud cleanup dorazí pozdě, zavolá se okamžitě (zabraňuje leaku
+  intervalů a listenerů z rozpracované předchozí routy).
+
+### Diagnostické nástroje v `index.html` a `main.js`
+
+V `index.html` je inline `<script>` blok (před hlavním modulem), který:
+- zachytí `window.error` a `unhandledrejection` → ukáže chybu **přímo na
+  stránce jako červenou lištu dole** (funguje i když JS bundle vůbec
+  nenaběhne, je to vanilla ES5)
+- po 8s zkontroluje `window.__tipovackaBooted` — pokud není nastavený,
+  ukáže timeout error s User-Agentem
+- vpravo dole zobrazuje malý šedivý **build marker** (`build YYYY-MM-DD-x`),
+  takže když uživatel pošle screenshot, hned vidíš jakou verzi má
+
+V `main.js` je `console.log('[tipovacka] build YYYY-MM-DD-x')` a
+`window.__tipovackaBooted = true`. **Build marker string měň při každém
+deployi** (i.e. `-a`, `-b`, `-c`...) — když uživatel reportuje problém,
+poznáš jakou verzi vidí.
+
+Když někdo příště nahlásí blank stránku / nereagující UI:
+1. Pošli mu link a řekni „pošli screenshot včetně dolního okraje"
+2. Vidí build marker → má novou verzi → problém je v běhu (kód, listenery, atd.)
+3. Vidí červenou lištu → máš error message + stack + UA, jdi rovnou po něm
+4. Nevidí ani jedno → cache nebo network, hard-refresh / clear data
+
 ## 🎨 Témata
 
 - **Světlý mód** — výchozí

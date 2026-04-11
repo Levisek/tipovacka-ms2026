@@ -209,16 +209,24 @@ export function renderDashboard(container) {
     initWinnerBet(container, () => loadWinnerBetsAndRerender(container))
   }
 
-  // Načti tipy z Firebase na pozadí (po renderu) a překresli
+  // Načti tipy z Firebase OD-LO-ŽE-NĚ — initial render dashboardu
+  // (72+ karet skupin + KO) je sám o sobě tučný kus práce pro mobilní
+  // CPU. Pokud bychom hned spustili 313+ Firestore dotazů, jejich
+  // callbacky a JSON.stringify diffy zaplní main thread tak, že telefon
+  // zamrzne na několik sekund (incident 2026-04-11). Defer dává
+  // browseru čas dokončit první layout a paint, než se začne počítat.
+  const DEFER = (fn) => setTimeout(fn, 500)
+
   if (player && matches.length > 0) {
-    loadBetsAndRerender(matches, player, container)
+    DEFER(() => loadBetsAndRerender(matches, player, container))
   }
-  loadWinnerBetsAndRerender(container)
-  loadBankAndRerender(container)
+  DEFER(() => loadWinnerBetsAndRerender(container))
+  DEFER(() => loadBankAndRerender(container))
 
   // Live Firebase listenery na tipy aktuálního dne (instant updates)
+  // — taky odložené, aby se nespouštěly v ten samý tick jako loady výše
   if (current.length > 0) {
-    setupLiveBetListeners(current, container)
+    DEFER(() => setupLiveBetListeners(current, container))
   }
 
   // Auto-update — vyčisti starou subscription před přidáním nové

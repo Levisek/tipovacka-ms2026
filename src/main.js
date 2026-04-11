@@ -41,13 +41,15 @@ initPlayerModal(() => {
   startRouter()
 })
 
-// Pokud hráč není vybraný, zobraz modal
+// Start router POUZE pokud hráč už existuje. Pokud ne, ukázat modal
+// a nechat dashboard nevykreslený dokud si nevybere — jinak se renderuje
+// 72 karet + 313 Firestore dotazů na pozadí pod modal oknem a sekne to telefon
+// (incident 2026-04-11).
 if (!getPlayerName()) {
   document.getElementById('player-modal').classList.add('visible')
+} else {
+  startRouter()
 }
-
-// Start router
-startRouter()
 
 // Auto-sync s football-data.org API
 import { startPolling, fetchSchedule } from './services/resultService.js'
@@ -60,7 +62,7 @@ startPolling()
 
 // Build marker — změna tohoto řetězce vynutí nový hash v názvu bundlu
 // (řeší občasnou corruptnutou cache entry v ATS edge cachi).
-console.log('[tipovacka] build 2026-04-11-c single-chunk')
+console.log('[tipovacka] build 2026-04-11-d defer-loads')
 
 // Signál pro inline error reporter v index.html (timeout watchdog)
 window.__tipovackaBooted = true
