@@ -100,19 +100,6 @@ export function bulkUpdate(updates) {
 }
 
 /**
- * Smaže všechny výsledky (RESET)
- */
-export function resetAllResults() {
-  for (const m of matchMap.values()) {
-    m.homeScore = null
-    m.awayScore = null
-    m.status = 'scheduled'
-  }
-  persist()
-  notify()
-}
-
-/**
  * Přidej listener na změny
  */
 export function onChange(fn) {
