@@ -27,6 +27,37 @@
   </head>
   <body>
     <div id="app"></div>
+
+    <!-- Build marker (viditelný i když JS selže — pomáhá identifikovat verzi) -->
+    <div id="build-marker" style="position:fixed;bottom:4px;right:6px;font:10px monospace;color:#888;opacity:0.6;z-index:9998;pointer-events:none">build 2026-04-11-c</div>
+
+    <!-- Error reporter (loaded jako klasický script, funguje i na starém Safari) -->
+    <div id="err-box" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#c00;color:#fff;padding:12px 14px;font:11px/1.4 monospace;white-space:pre-wrap;z-index:9999;max-height:60vh;overflow:auto;border-top:3px solid #fff"></div>
+    <script>
+      (function() {
+        function show(msg) {
+          var b = document.getElementById('err-box');
+          if (!b) return;
+          b.style.display = 'block';
+          b.textContent = (b.textContent ? b.textContent + '\n\n' : '') + msg;
+        }
+        window.addEventListener('error', function(e) {
+          var src = (e.filename || '?').replace(/^https?:\/\/[^/]+/, '');
+          show('JS ERROR\n' + (e.message || e) + '\n' + src + ':' + (e.lineno || '?') + ':' + (e.colno || '?') + (e.error && e.error.stack ? '\n\nSTACK:\n' + e.error.stack : ''));
+        }, true);
+        window.addEventListener('unhandledrejection', function(e) {
+          var r = e.reason || {};
+          show('PROMISE REJECT\n' + (r.message || r) + (r.stack ? '\n\n' + r.stack : ''));
+        });
+        // Sanity check: pokud za 8s neběží main.js, něco se nenačetlo
+        setTimeout(function() {
+          if (!window.__tipovackaBooted) {
+            show('TIMEOUT: main.js se nenačetl do 8s\n\nÚA: ' + navigator.userAgent + '\nURL: ' + location.href);
+          }
+        }, 8000);
+      })();
+    </script>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

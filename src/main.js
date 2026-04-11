@@ -60,4 +60,7 @@ startPolling()
 
 // Build marker — změna tohoto řetězce vynutí nový hash v názvu bundlu
 // (řeší občasnou corruptnutou cache entry v ATS edge cachi).
-console.log('[tipovacka] build 2026-04-11-a')
+console.log('[tipovacka] build 2026-04-11-c single-chunk')
+
+// Signál pro inline error reporter v index.html (timeout watchdog)
+window.__tipovackaBooted = true
