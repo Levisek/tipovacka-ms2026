@@ -133,7 +133,7 @@ export function renderDashboard(container) {
         <div class="tip-collapsible-content">
           ${upcomingDays.map(date => `
             <div class="tip-day">
-              <div class="tip-day-header">${formatDateFull(date)} <span class="tip-deadline">Deadline: ${getDeadlineTime(date)}</span></div>
+              <div class="tip-day-header">${formatDateFull(date)}</div>
               <div class="tip-day-matches">
                 ${upcomingByDate.get(date).map(m =>
                   renderMatchCard(m, cardOptions(m))
@@ -155,7 +155,7 @@ export function renderDashboard(container) {
         <div class="tip-collapsible-content">
           ${finishedDays.map(date => `
             <div class="tip-day">
-              <div class="tip-day-header">${formatDateFull(date)} <span class="tip-deadline">Deadline: ${getDeadlineTime(date)}</span></div>
+              <div class="tip-day-header">${formatDateFull(date)}</div>
               <div class="tip-day-matches">
                 ${finishedByDate.get(date).map(m =>
                   renderMatchCard(m, { ...cardOptions(m), showBetForm: false })
