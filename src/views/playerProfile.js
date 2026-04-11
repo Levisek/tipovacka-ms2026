@@ -4,10 +4,9 @@ import { HOME_TEAM } from '../config/teams.js'
 import archive2022 from '../config/archive2022.json'
 import archiveEuro2024 from '../config/archiveEuro2024.json'
 import * as store from '../services/matchStore.js'
-import { onBetsChange } from '../services/betService.js'
 
 let _profileUnsub = null
-let _profileBetUnsubs = []
+let _profileInterval = null
 
 export async function renderPlayerProfile(container, params) {
   const playerName = decodeURIComponent(params.name || '')
@@ -150,46 +149,23 @@ export async function renderPlayerProfile(container, params) {
   `
 
   // ===== LIVE UPDATES =====
-  // Vyčisti staré subscriptions (pokud byly z předchozího renderu)
+  // Vyčisti staré subscriptions
   if (_profileUnsub) { _profileUnsub(); _profileUnsub = null }
-  _profileBetUnsubs.forEach(u => { try { u() } catch (e) {} })
-  _profileBetUnsubs = []
+  if (_profileInterval) { clearInterval(_profileInterval); _profileInterval = null }
 
-  // 1) Sleduj změny matchStore (zadání výsledků)
+  // 1) Sleduj změny matchStore (zadání výsledků zápasů)
   _profileUnsub = store.onChange(() => renderPlayerProfile(container, params))
 
-  // 2) Sleduj změny tipů přes Firebase live listenery (jen pro MS 2026 zápasy)
-  // POZN.: onBetsChange emituje initial snapshot ihned po setup, ten musíme přeskočit
-  // jinak by re-render → re-setup → re-emit → nekonečná smyčka
-  if (isCurrentPlayer) {
-    const allMatches = store.getAllMatches()
-    let pending = false
-    allMatches.forEach(m => {
-      let firstCall = true
-      try {
-        const unsub = onBetsChange(m.id, () => {
-          if (firstCall) {
-            firstCall = false
-            return // initial snapshot, ne změna
-          }
-          if (pending) return
-          pending = true
-          // Throttle: re-render až po 500ms aby se neudělalo 100 renderů zaráz
-          setTimeout(() => {
-            pending = false
-            renderPlayerProfile(container, params)
-          }, 500)
-        })
-        _profileBetUnsubs.push(unsub)
-      } catch (e) {}
-    })
-  }
+  // 2) Periodický refetch každých 30s pro aktuální tipy ostatních
+  // (Firebase live listenery na 104 zápasů přetížily Firestore)
+  _profileInterval = setInterval(() => {
+    renderPlayerProfile(container, params)
+  }, 30000)
 
   // Cleanup return — router ho zavolá při změně routy
   return () => {
     if (_profileUnsub) { _profileUnsub(); _profileUnsub = null }
-    _profileBetUnsubs.forEach(u => { try { u() } catch (e) {} })
-    _profileBetUnsubs = []
+    if (_profileInterval) { clearInterval(_profileInterval); _profileInterval = null }
   }
 }
 
