@@ -16,6 +16,32 @@ export async function deleteAllBetsForMatch(matchId) {
 }
 
 /**
+ * Smaže všechny tipy ze všech zápasů (RESET)
+ */
+export async function deleteAllBets(matchIds) {
+  let total = 0
+  for (const id of matchIds) {
+    try {
+      total += await deleteAllBetsForMatch(id)
+    } catch (e) {}
+  }
+  return total
+}
+
+/**
+ * Smaže všechny tipy na vítěze
+ */
+export async function deleteAllWinnerBets() {
+  const snap = await getDocs(collection(db, 'winnerBets'))
+  const deletes = []
+  snap.forEach(d => {
+    deletes.push(deleteDoc(doc(db, 'winnerBets', d.id)))
+  })
+  await Promise.all(deletes)
+  return deletes.length
+}
+
+/**
  * Uloží tip hráče na zápas
  */
 export async function placeBet(matchId, playerId, homeScore, awayScore) {

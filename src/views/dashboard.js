@@ -272,15 +272,27 @@ async function loadBetsAndRerender(matches, player, container) {
           getPlayerBet(m.id, player),
           getAllBets(m.id),
         ])
-        if (bet && JSON.stringify(_betCache[m.id]) !== JSON.stringify(bet)) {
-          _betCache[m.id] = bet
+        // Tip hráče
+        if (bet) {
+          if (JSON.stringify(_betCache[m.id]) !== JSON.stringify(bet)) {
+            _betCache[m.id] = bet
+            changed = true
+          }
+        } else if (_betCache[m.id]) {
+          // Tip byl smazaný — vyhoď z cache
+          delete _betCache[m.id]
           changed = true
         }
-        if (allBets && Object.keys(allBets).length > 0) {
+        // Všechny tipy
+        const hasAllBets = allBets && Object.keys(allBets).length > 0
+        if (hasAllBets) {
           if (JSON.stringify(_allBetsCache[m.id]) !== JSON.stringify(allBets)) {
             _allBetsCache[m.id] = allBets
             changed = true
           }
+        } else if (_allBetsCache[m.id]) {
+          delete _allBetsCache[m.id]
+          changed = true
         }
       } catch (e) {}
     }))

@@ -4,7 +4,7 @@ import { formatDateShort } from '../utils/date.js'
 import { getAllBets } from '../services/betService.js'
 import { getTeam } from '../config/teams.js'
 import * as store from '../services/matchStore.js'
-import { placeBet, deleteAllBetsForMatch } from '../services/betService.js'
+import { placeBet, deleteAllBetsForMatch, deleteAllBets, deleteAllWinnerBets } from '../services/betService.js'
 
 // Pravidla MS 2026 (sázka vždy za zápas)
 const GROUP_BET = 20    // Kč za zápas
@@ -128,6 +128,16 @@ export function renderAdmin(container) {
       <div id="seed-bets-status" style="margin-top: 8px;"></div>
     </div>
 
+    <!-- RESET -->
+    <div class="admin-section" style="border: 2px solid var(--color-locked);">
+      <h2 style="color: var(--color-locked);">⚠ Reset všeho</h2>
+      <p style="color: var(--color-text-dim); margin-bottom: 12px; font-size: 13px;">
+        Smaže <strong>všechny tipy</strong> ze všech zápasů, <strong>všechny tipy na vítěze</strong> a <strong>všechny zadané výsledky</strong>. Tato akce je nevratná!
+      </p>
+      <button class="btn-admin" id="btn-reset-all" style="background: var(--color-locked); color: #fff; border-color: var(--color-locked);">Resetovat vše</button>
+      <div id="reset-status" style="margin-top: 8px;"></div>
+    </div>
+
     <!-- TIPY HRÁČŮ -->
     <div class="admin-section">
       <h2>Tipy hráčů</h2>
@@ -241,6 +251,33 @@ export function renderAdmin(container) {
   }
   document.getElementById('btn-load-bets').addEventListener('click', loadBets)
   loadBets() // automaticky při otevření
+
+  // RESET VŠEHO
+  document.getElementById('btn-reset-all').addEventListener('click', async () => {
+    if (!confirm('OPRAVDU smazat všechny tipy, výsledky a tip na vítěze? Tato akce je nevratná!')) return
+    if (!confirm('Tohle smaže úplně VŠECHNO ve Firebase i lokálně. Opravdu chceš pokračovat?')) return
+
+    const status = document.getElementById('reset-status')
+    status.textContent = 'Mažu vše…'
+    status.style.color = 'var(--color-text-dim)'
+    try {
+      const allMatchIds = MATCHES.map(m => m.id)
+      const [betsCount, winnerCount] = await Promise.all([
+        deleteAllBets(allMatchIds),
+        deleteAllWinnerBets(),
+      ])
+      // Reset lokálních výsledků
+      store.resetAllResults()
+      // Vyčisti i snapshot žebříčku z localStorage
+      localStorage.removeItem('ms2026_standings_snapshot')
+      status.textContent = `✓ Smazáno ${betsCount} tipů, ${winnerCount} tipů na vítěze a všechny výsledky.`
+      status.style.color = 'var(--color-open)'
+      loadBets()
+    } catch (e) {
+      status.textContent = '✗ Chyba: ' + e.message
+      status.style.color = 'var(--color-locked)'
+    }
+  })
 
   // Smazat testovací tipy z 1. zápasu
   document.getElementById('btn-clear-bets').addEventListener('click', async () => {
