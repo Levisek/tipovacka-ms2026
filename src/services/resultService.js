@@ -2,9 +2,27 @@ import { MATCHES } from '../config/schedule.js'
 import * as store from './matchStore.js'
 import { POLLING_INTERVAL_MS, CEST_OFFSET_HOURS } from '../config/constants.js'
 
-// football-data.org free tier (10 req/min)
-const API_BASE = 'https://api.football-data.org/v4'
+// PHP proxy na našem serveru → footballdata-org (řeší CORS + skrývá API key)
+// V dev (localhost) volá API přímo, v produkci přes /api/wc.php
+const isDev = typeof window !== 'undefined' && window.location.hostname === 'localhost'
+const API_PROXY = isDev
+  ? 'https://api.football-data.org/v4'
+  : '/tipovacka/api/wc.php?path='
+
+// API key se používá jen v dev (přímý fetch), v produkci je v PHP
 const API_KEY = 'db35374c3fe748069840d3f664bfda3c'
+
+// Helper: postaví URL pro fetch
+function apiUrl(path) {
+  if (isDev) return API_PROXY + path
+  // Produkce přes proxy: path se předá jako query parametr
+  return API_PROXY + encodeURIComponent(path)
+}
+
+// Helper: hlavičky pro fetch (jen v dev potřebujeme X-Auth-Token)
+function apiHeaders() {
+  return isDev ? { 'X-Auth-Token': API_KEY } : {}
+}
 
 let pollingInterval = null
 
@@ -55,11 +73,9 @@ function findMatch(apiHome, apiAway, apiDate) {
  * a aktualizuje matchStore přes bulkUpdateSchedule
  */
 export async function fetchSchedule() {
-  if (!API_KEY) return { updated: 0, error: 'Chybí API klíč' }
-
   try {
-    const res = await fetch(`${API_BASE}/competitions/WC/matches`, {
-      headers: { 'X-Auth-Token': API_KEY }
+    const res = await fetch(apiUrl('/competitions/WC/matches'), {
+      headers: apiHeaders()
     })
     if (!res.ok) throw new Error(`API ${res.status}: ${res.statusText}`)
     const data = await res.json()
@@ -156,8 +172,8 @@ export async function fetchAllResults() {
   }
 
   try {
-    const res = await fetch(`${API_BASE}/competitions/WC/matches`, {
-      headers: { 'X-Auth-Token': API_KEY }
+    const res = await fetch(apiUrl('/competitions/WC/matches'), {
+      headers: apiHeaders()
     })
     if (!res.ok) throw new Error(`API ${res.status}: ${res.statusText}`)
     const data = await res.json()
@@ -207,8 +223,8 @@ export async function fetchTodayResults() {
 
   try {
     const today = new Date().toISOString().slice(0, 10)
-    const res = await fetch(`${API_BASE}/competitions/WC/matches?dateFrom=${today}&dateTo=${today}`, {
-      headers: { 'X-Auth-Token': API_KEY }
+    const res = await fetch(apiUrl(`/competitions/WC/matches?dateFrom=${today}&dateTo=${today}`), {
+      headers: apiHeaders()
     })
     if (!res.ok) throw new Error(`API ${res.status}`)
     const data = await res.json()
