@@ -8,7 +8,7 @@
  * duplikovat rozpis ani mapu názvů týmů.
  *
  * Cron příklad (Wedos plánovač úloh, každých 5 min):
- *   curl -s "https://levinger.cz/tipovacka/api/sync-results.php?token=ms2026_sync_n7Qk2pX9"
+ *   curl -s "https://levinger.cz/tipovacka/api/sync-results.php?token=VAS_SYNC_TOKEN"
  */
 
 header('Content-Type: application/json; charset=utf-8');

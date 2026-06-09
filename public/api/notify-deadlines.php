@@ -11,7 +11,7 @@
  * polednem patří k předchozímu hracímu dni (kvůli zámořským nočním zápasům).
  *
  * Cron (Wedos, každou hodinu):
- *   curl -s "https://levinger.cz/tipovacka/api/notify-deadlines.php?token=ms2026_sync_n7Qk2pX9"
+ *   curl -s "https://levinger.cz/tipovacka/api/notify-deadlines.php?token=VAS_SYNC_TOKEN"
  *
  * Testovací parametry:
  *   &dry=1            — nic neodešle, jen vypíše co by udělal
