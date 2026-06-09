@@ -21,7 +21,8 @@ header('Expires: 0');
 // --- Slabá ochrana endpointu (jen proti drive-by botům). ---
 // POZOR: skutečné zabezpečení = uzamčené Firestore rules. Tenhle token
 // brání jen náhodným hitům, protože zápis do Firestore je teď stejně otevřený.
-$SYNC_TOKEN = 'ms2026_sync_n7Qk2pX9';
+$cfg = require __DIR__ . '/secrets.php';
+$SYNC_TOKEN = $cfg['SYNC_TOKEN'];
 if (($_GET['token'] ?? '') !== $SYNC_TOKEN) {
     http_response_code(403);
     echo json_encode(['error' => 'forbidden']);
@@ -29,9 +30,9 @@ if (($_GET['token'] ?? '') !== $SYNC_TOKEN) {
 }
 
 $API_BASE   = 'https://api.football-data.org/v4';
-$API_KEY    = 'db35374c3fe748069840d3f664bfda3c';
+$API_KEY    = $cfg['FOOTBALL_DATA_KEY'];
 $FB_PROJECT = 'msfotbaltipovacka';
-$FB_KEY     = 'AIzaSyCrcDs70l_CJdQCPZGPHnNf2A9AdCnBb4U';
+$FB_KEY     = $cfg['FIREBASE_API_KEY'];
 
 // === 1) Stáhni zápasy z football-data ===
 $ch = curl_init("$API_BASE/competitions/WC/matches");

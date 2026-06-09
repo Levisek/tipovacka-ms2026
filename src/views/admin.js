@@ -7,6 +7,7 @@ import * as store from '../services/matchStore.js'
 import { placeBet } from '../services/betService.js'
 import { RULES_2026 } from '../services/standingsService.js'
 import { ADMIN_SESSION_KEY, MAX_SCORE, STORAGE_KEYS } from '../config/constants.js'
+import { getPayments, setPayment } from '../services/paymentsService.js'
 
 const GROUP_BET = RULES_2026.groupBet
 const KO_MATCH_BET = RULES_2026.koMatchBet
@@ -264,6 +265,29 @@ export function renderAdmin(container) {
   }
   document.getElementById('btn-load-bets').addEventListener('click', loadBets)
   loadBets() // automaticky při otevření
+
+  // Platby — stav z Firestore (sdílené napříč zařízeními), změna hned ukládá
+  const paymentChecks = container.querySelectorAll('.payment-check input[type="checkbox"]')
+  async function loadPayments() {
+    try {
+      const payments = await getPayments()
+      paymentChecks.forEach(cb => {
+        const rec = payments[cb.dataset.player]
+        cb.checked = !!(rec && rec[cb.dataset.phase])
+      })
+    } catch (e) {}
+  }
+  paymentChecks.forEach(cb => {
+    cb.addEventListener('change', async () => {
+      try {
+        await setPayment(cb.dataset.player, cb.dataset.phase, cb.checked)
+      } catch (e) {
+        cb.checked = !cb.checked
+        alert('Nepodařilo se uložit platbu: ' + (e && e.message ? e.message : e))
+      }
+    })
+  })
+  loadPayments()
 
   // Vyčistit lokální cache (výsledky + standings snapshot)
   document.getElementById('btn-clear-cache').addEventListener('click', () => {

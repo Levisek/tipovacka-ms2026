@@ -18,8 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Konfigurace
+$cfg = require __DIR__ . '/secrets.php';
 $API_BASE = 'https://api.football-data.org/v4';
-$API_KEY = 'db35374c3fe748069840d3f664bfda3c';
+$API_KEY = $cfg['FOOTBALL_DATA_KEY'];
 
 // Validace path parametru — povolit jen WC matches endpointy
 $path = $_GET['path'] ?? '';

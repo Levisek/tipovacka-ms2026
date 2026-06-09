@@ -6,8 +6,9 @@
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
 
-// >>> Až budeš chtít, změň si PIN tady (a nikde jinde už není potřeba). <<<
-$ADMIN_PIN = 'AdminjeBuh7';
+// PIN je v secrets.php (mimo git). Změnit = upravit secrets.php na serveru.
+$cfg = require __DIR__ . '/secrets.php';
+$ADMIN_PIN = $cfg['ADMIN_PIN'];
 
 $raw  = file_get_contents('php://input');
 $body = json_decode($raw, true);

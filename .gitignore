@@ -28,6 +28,9 @@ dist-ssr
 .levis-tmp/
 .claude/
 
+# Serverové tajnosti — NIKDY do gitu (žije jen na serveru)
+public/api/secrets.php
+
 # Source data (Excel imports)
 *.xlsx
 
