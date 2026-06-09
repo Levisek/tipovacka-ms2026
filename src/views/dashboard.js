@@ -36,15 +36,18 @@ export function renderDashboard(container) {
 
   // Najdi nejbližší FOTBALOVÝ den s neodehranými zápasy (noční zápasy patří
   // k předchozímu večeru — viz bettingDayOf)
+  // Live zápas (běží, má průběžné skóre) NENÍ odehraný — jeho den drží jako
+  // aktuální, ať ho každý vidí v hlavním výpisu vč. cizích tipů vůči skóre.
   const unplayedDates = [...new Set(
     matches
-      .filter(m => m.status !== 'finished' && m.homeScore === null)
+      .filter(m => m.status !== 'finished')
       .map(m => bettingDayOf(m.date, m.kickoff))
   )].sort()
   const currentDay = unplayedDates[0] || null
 
   for (const m of matches) {
-    if (m.status === 'finished' || (m.homeScore !== null && m.homeScore !== undefined)) {
+    if (m.status === 'finished') {
+      // Do „Odehráno" jen SKUTEČNĚ dohrané. Live zápas zůstane v aktuálním dni.
       finished.push(m)
     } else if (currentDay && bettingDayOf(m.date, m.kickoff) === currentDay) {
       current.push(m)
