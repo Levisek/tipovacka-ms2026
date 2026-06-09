@@ -53,10 +53,8 @@ export function renderMatchCard(match, options = {}) {
     betHtml = `
       <div class="bet-form bet-locked" data-match-id="${match.id}">
         <div class="bet-locked-score">${options.bet.home}</div>
-        <div class="bet-locked-label">
-          <span class="bet-check">✓</span> Tvůj tip
-        </div>
-        <div class="bet-locked-score">${options.bet.away}</div>
+        <div class="bet-locked-label">Tvůj tip</div>
+        <div class="bet-locked-score">${options.bet.away} <span class="bet-check">✓</span></div>
         ${canEdit ? `<button class="bet-edit-btn" data-match-id="${match.id}" title="Upravit tip" aria-label="Upravit">✎</button>` : ''}
       </div>
     `

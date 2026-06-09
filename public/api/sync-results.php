@@ -159,10 +159,24 @@ foreach ($withId as $id => $m) {
     }
 }
 
+// Připomínky na deadline: Wedos má limit 3 cronů (všechny zabrané), takže
+// notify spouštíme přívěškem na tomhle sync cronu. Oddělený soubor = když
+// notify selže, sync to neovlivní. Vlastní fetch + notifyLog hlídá duplicity.
+$notify = null;
+$nc = curl_init('https://levinger.cz/tipovacka/api/notify-deadlines.php?token=' . urlencode($SYNC_TOKEN));
+curl_setopt_array($nc, [
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_TIMEOUT        => 30,
+]);
+$notify = curl_exec($nc);
+$nrc = curl_getinfo($nc, CURLINFO_HTTP_CODE);
+curl_close($nc);
+
 echo json_encode([
     'ok'      => true,
     'written' => $written,
     'skipped' => $skipped,
     'total'   => count($withId),
     'errors'  => $errors,
+    'notify'  => ['code' => $nrc, 'resp' => json_decode($notify, true)],
 ], JSON_PRETTY_PRINT);

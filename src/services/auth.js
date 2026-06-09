@@ -3,7 +3,7 @@ const STORAGE_KEY = STORAGE_KEYS.PLAYER
 
 const PLAYERS = [
   'Levis', 'Schmutzik', 'Kečup', 'Šruby',
-  'Šinďa', 'Luki', 'Dvory', 'Miky'
+  'Šinďa', 'Luki', 'Dvory', 'Miky', 'Maro'
 ]
 
 export function getPlayers() {

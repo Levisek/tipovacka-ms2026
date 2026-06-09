@@ -49,6 +49,22 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // Odběry push notifikací: pushSubs/{hashEndpointu} = { endpoint, ... }
+    // Klient zakládá, cron čte (rozesílá) a maže mrtvé odběry (404/410).
+    match /pushSubs/{id} {
+      allow read: if true;
+      allow create, update: if request.resource.data.endpoint is string;
+      allow delete: if true;
+    }
+
+    // Záznam, že připomínka na daný hrací den už byla odeslána (proti duplicitám).
+    // Píše jen cron; klient se sem nedostane.
+    match /notifyLog/{day} {
+      allow read: if true;
+      allow create, update: if true;
+      allow delete: if false;
+    }
+
     // Cokoli jiného: zakázat.
     match /{document=**} {
       allow read, write: if false;
