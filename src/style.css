@@ -94,6 +94,11 @@ nav {
   align-items: center;
   gap: var(--gap);
   padding: 12px 20px;
+  /* iOS standalone: status bar je „black-translucent" a appka jde pod hodiny/wifi.
+     Podložíme nav barvou a posuneme obsah pod notch (na Androidu/desktopu = 0). */
+  padding-top: calc(12px + env(safe-area-inset-top));
+  padding-left: calc(20px + env(safe-area-inset-left));
+  padding-right: calc(20px + env(safe-area-inset-right));
   background: var(--color-surface);
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   position: sticky;
