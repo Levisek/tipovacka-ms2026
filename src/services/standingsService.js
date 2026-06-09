@@ -11,6 +11,7 @@
 import * as store from './matchStore.js'
 import { getAllBets, getWinnerBets } from './betService.js'
 import { getPlayers } from './auth.js'
+import { bettingDayOf, isPastDeadline } from '../utils/date.js'
 
 export const RULES_2026 = {
   groupBet: 20,
@@ -139,7 +140,11 @@ export async function computeLiveStandings() {
       }
     })
     // Pokud má zápas výsledek, vyhodnoť
-    const hasResult = match.homeScore !== null && match.homeScore !== undefined
+    // Vyhodnocujeme jen DOHRANÉ zápasy. Live zápas (průběžné skóre, status
+    // 'live') se nesmí počítat jako finální — jinak by žebříček během zápasu
+    // blikal a předčasně vyplácel/přenášel bank.
+    const hasResult = match.status === 'finished'
+      && match.homeScore !== null && match.homeScore !== undefined
     if (hasResult) {
       const matchPool = tippedPlayers.length * RULES_2026.groupBet + bankCarry
       const winners = tippedPlayers.filter(p => {
@@ -172,7 +177,11 @@ export async function computeLiveStandings() {
         totalDeposit += RULES_2026.koMatchBet
       }
     })
-    const hasResult = match.homeScore !== null && match.homeScore !== undefined
+    // Vyhodnocujeme jen DOHRANÉ zápasy. Live zápas (průběžné skóre, status
+    // 'live') se nesmí počítat jako finální — jinak by žebříček během zápasu
+    // blikal a předčasně vyplácel/přenášel bank.
+    const hasResult = match.status === 'finished'
+      && match.homeScore !== null && match.homeScore !== undefined
     if (hasResult) {
       const matchPool = tippedPlayers.length * RULES_2026.koMatchBet + bankCarry
       const winners = tippedPlayers.filter(p => {
@@ -218,18 +227,40 @@ export async function computeLiveStandings() {
 
   // Pokud turnaj skončil a známe vítěze, vyhodnotit
   const finalMatch = koMatches.find(m => m.stage === 'F') || koMatches[koMatches.length - 1]
-  const tournamentFinished = finalMatch && finalMatch.homeScore !== null
+  const tournamentFinished = finalMatch && finalMatch.status === 'finished'
   let actualWinner = null
   if (tournamentFinished) {
     actualWinner = finalMatch.homeScore > finalMatch.awayScore ? finalMatch.home : finalMatch.away
-    Object.entries(winnerBets).forEach(([p, team]) => {
-      if (team === actualWinner && stats[p]) {
-        const bonus = RULES_2026.winnerBet * Object.keys(winnerBets).length
-        stats[p].winnerBonus = bonus
-        totalWon += bonus
-      }
-    })
+    // Vítěz(ové) tipu berou CELÝ bank na vítěze (carry z Eura + 100 × počet
+    // tipujících). Když trefí víc lidí, dělí se rovným dílem.
+    const correctTippers = Object.entries(winnerBets)
+      .filter(([p, team]) => team === actualWinner && stats[p])
+      .map(([p]) => p)
+    if (correctTippers.length > 0) {
+      const share = winnerBank / correctTippers.length
+      correctTippers.forEach(p => {
+        stats[p].winnerBonus = share
+        totalWon += share
+      })
+    }
   }
+
+  // Bank, který je právě „ve hře": carry z odehraných nevyhraných zápasů
+  // + vklady do NEJBLIŽŠÍHO zápasu, jehož sázky jsou už uzavřené (po deadline)
+  // a ještě nedohrál. Díky tomu se bank ukáže hned po uzávěrce, ne až po
+  // odehrání. Bere se jen JEDEN nejbližší zápas — pool dalších naskočí teprve
+  // až na ně dojde řada (po vyřešení toho předchozího).
+  const nextLockedMatch = [...groupMatches, ...koMatches].find(m =>
+    m.status !== 'finished'
+    && Object.keys(allBetsMap[m.id] || {}).length > 0
+    && isPastDeadline(bettingDayOf(m.date, m.kickoff))
+  )
+  let activePool = 0
+  if (nextLockedMatch) {
+    const stake = nextLockedMatch.stage === 'group' ? RULES_2026.groupBet : RULES_2026.koMatchBet
+    activePool = Object.keys(allBetsMap[nextLockedMatch.id]).length * stake
+  }
+  const currentBank = bankCarry + activePool
 
   // Sestavení žebříčku
   const standings = Object.values(stats).map(s => ({
@@ -241,7 +272,7 @@ export async function computeLiveStandings() {
 
   return {
     standings,
-    currentBank: bankCarry,
+    currentBank,
     totalDeposit,
     totalWon,
     actualWinner,

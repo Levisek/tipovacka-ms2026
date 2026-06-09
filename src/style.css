@@ -1787,6 +1787,24 @@ h3 { font-size: 16px; font-weight: 500; }
 
 .table-scroll {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  /* Tenký, ale stále viditelný scrollbar — naznačí že jde scrollovat do strany */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-text-dim) var(--color-surface-2);
+}
+
+.table-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.table-scroll::-webkit-scrollbar-track {
+  background: var(--color-surface-2);
+  border-radius: 3px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-text-dim);
+  border-radius: 3px;
 }
 
 .archive-tip {
