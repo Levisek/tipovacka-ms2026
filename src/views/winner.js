@@ -1,5 +1,5 @@
 import { computeLiveStandings, RULES_2026 } from '../services/standingsService.js'
-import { renderWinnerBet, initWinnerBet } from '../components/winnerBet.js'
+import { renderWinnerBet, initWinnerBet, isWinnerLocked } from '../components/winnerBet.js'
 import { getPlayerName } from '../services/auth.js'
 import * as store from '../services/matchStore.js'
 
@@ -28,6 +28,9 @@ export async function renderWinner(container) {
   const player = getPlayerName()
   const myBet = winnerBets[player] || null
   const entries = Object.entries(winnerBets || {})
+  // Tipy na vítěze se odhalí až po deadline (před prvním zápasem) — do té doby
+  // jen "kdo už tipl", ne KOHO. Stejně jako u tipů na zápasy.
+  const locked = isWinnerLocked()
 
   container.innerHTML = `
     <div class="section-header">
@@ -69,7 +72,9 @@ export async function renderWinner(container) {
               const isCorrect = tournamentFinished && team === actualWinner
               const isEliminated = eliminations[team] === 'eliminated'
               let statusHtml
-              if (isCorrect) {
+              if (!locked) {
+                statusHtml = '<span class="winner-status in">✓ tipnuto</span>'
+              } else if (isCorrect) {
                 statusHtml = '<span class="winner-status correct">🏆 Vítěz!</span>'
               } else if (isEliminated) {
                 statusHtml = '<span class="winner-status out">❌ Vypadl</span>'
@@ -77,10 +82,12 @@ export async function renderWinner(container) {
                 statusHtml = '<span class="winner-status in">✓ Ve hře</span>'
               }
               const isMine = p === player
+              // Vlastní tip vidím vždy; cizí tým je skrytý do deadline.
+              const teamCell = (locked || isMine) ? team : '🔒 skryto'
               return `
                 <tr class="${isEliminated ? 'eliminated' : ''} ${isMine ? 'mine' : ''}">
                   <td><a href="#/player/${encodeURIComponent(p)}" class="player-link"><strong>${p}</strong></a>${isMine ? ' <span style="color: var(--color-text-dim); font-size: 11px;">(ty)</span>' : ''}</td>
-                  <td>${team}</td>
+                  <td>${teamCell}</td>
                   <td>${statusHtml}</td>
                 </tr>
               `

@@ -1,5 +1,5 @@
 import { getTeam, flagImg, HOME_TEAM } from '../config/teams.js'
-import { formatDateShort, formatTime, isPastDeadline, timeUntilDeadline, getDeadlineTime } from '../utils/date.js'
+import { formatDateShort, formatTime, isPastDeadline, timeUntilDeadline, getDeadlineTime, bettingDayOf } from '../utils/date.js'
 import { STAGE_NAMES } from '../config/schedule.js'
 import { MAX_SCORE } from '../config/constants.js'
 
@@ -12,7 +12,8 @@ export function renderMatchCard(match, options = {}) {
   const home = getTeam(match.home)
   const away = getTeam(match.away)
   const hasResult = match.homeScore !== null && match.homeScore !== undefined
-  const pastDeadline = isPastDeadline(match.date)
+  const bday = bettingDayOf(match.date, match.kickoff)
+  const pastDeadline = isPastDeadline(bday)
   const isLive = match.status === 'live'
   const isHomeOurs = match.home === HOME_TEAM
   const isAwayOurs = match.away === HOME_TEAM
@@ -26,7 +27,7 @@ export function renderMatchCard(match, options = {}) {
   } else if (pastDeadline) {
     statusBadge = '<span class="badge badge-locked">Uzavřeno</span>'
   } else {
-    const dlTime = getDeadlineTime(match.date)
+    const dlTime = getDeadlineTime(bday)
     statusBadge = `<span class="badge badge-open">Tip do ${dlTime}</span>`
   }
 
@@ -76,9 +77,11 @@ export function renderMatchCard(match, options = {}) {
     `
   }
 
-  // All bets — viditelné po deadline nebo když je výsledek
+  // Tipy ostatních: SKÓRE se ukáže až po deadline / při výsledku.
+  // Před deadline jen KONTROLA ÚČASTI — kdo už tipnul, bez skóre.
   let allBetsHtml = ''
-  if (options.allBets && (pastDeadline || hasResult)) {
+  const revealed = pastDeadline || hasResult
+  if (options.allBets && revealed) {
     const betsEntries = Object.entries(options.allBets)
     if (betsEntries.length > 0) {
       // Pomocná funkce: může tento tip ještě trefit přesný výsledek?
@@ -101,6 +104,15 @@ export function renderMatchCard(match, options = {}) {
               <span class="bet-tip">${bet.home} : ${bet.away}</span>
             </div>`
           }).join('')}
+        </div>
+      `
+    }
+  } else if (options.allBets) {
+    const tipped = Object.keys(options.allBets)
+    if (tipped.length > 0) {
+      allBetsHtml = `
+        <div class="all-bets bets-roster">
+          ${tipped.map(p => `<span class="bet-row"><span class="bet-player">${p}</span><span class="bet-check">✓ tipnuto</span></span>`).join('')}
         </div>
       `
     }

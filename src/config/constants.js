@@ -8,7 +8,7 @@ export const APP_BRAND_NAME = 'Pískové doly'
 export const APP_SUBTITLE = 'Tipovačka MS 2026'
 
 // ===== ADMIN =====
-export const ADMIN_PIN = 'AdminjeBuh7'
+// PIN je SERVEROVĚ v api/admin-auth.php — NIKDY v klientském buildu.
 export const ADMIN_SESSION_KEY = 'ms2026_admin_auth'
 
 // ===== INPUT LIMITS =====

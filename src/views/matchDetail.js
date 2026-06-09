@@ -1,4 +1,5 @@
 import { getMatch as getMatchById } from '../services/matchStore.js'
+import { isPastDeadline, bettingDayOf } from '../utils/date.js'
 import { renderMatchCard } from '../components/matchCard.js'
 import { initBetForms } from '../components/betForm.js'
 import { startCountdown } from '../components/countdown.js'
@@ -12,6 +13,9 @@ export async function renderMatchDetail(container, params) {
     container.innerHTML = '<h2>Zápas nenalezen</h2><a href="#/">Zpět</a>'
     return
   }
+
+  const hasResult = match.homeScore !== null && match.homeScore !== undefined
+  const revealed = isPastDeadline(bettingDayOf(match.date, match.kickoff)) || hasResult
 
   const player = getPlayerName()
   let bet = null
@@ -36,7 +40,7 @@ export async function renderMatchDetail(container, params) {
         allBets
       })}
     </div>
-    ${Object.keys(allBets).length > 0 ? `
+    ${revealed && Object.keys(allBets).length > 0 ? `
       <div class="match-detail-section">
         <h3>Všechny tipy</h3>
         <div class="all-bets-detail">
@@ -56,7 +60,7 @@ export async function renderMatchDetail(container, params) {
     ` : ''}
   `
 
-  const cleanupCountdown = startCountdown(match.date, document.getElementById('countdown'))
+  const cleanupCountdown = startCountdown(bettingDayOf(match.date, match.kickoff), document.getElementById('countdown'))
 
   if (player) {
     initBetForms(container, async (matchId, homeScore, awayScore) => {

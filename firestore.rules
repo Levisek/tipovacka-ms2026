@@ -1,0 +1,65 @@
+rules_version = '2';
+
+// Appka nemá přihlašování (identita = jméno hráče v localStorage), takže
+// nejde dělat "jen vlastník edituje". Co ALE umíme a co řeší nejhorší rizika:
+//   • ZAKÁZAT mazání → nikdo nemůže smazat/wipnout cizí tipy ani výsledky
+//   • Validovat TVAR zápisu → žádný garbage / přepis cizími typy
+// Plná integrita výsledků (aby je psal jen cron) = service account + admin SDK,
+// viz poznámka v deploy instrukcích. Tohle je pragmatické minimum před startem.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Tipy na zápasy: matches/{matchId}/bets/{player}
+    match /matches/{matchId}/bets/{player} {
+      allow read: if true;
+      allow create, update: if isValidBet();
+      allow delete: if false;
+    }
+
+    // Samotný dokument zápasu se z klienta needituje.
+    match /matches/{matchId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Výsledky: plní cron (REST se stejným web klíčem → podléhá těmto pravidlům),
+    // i ruční zadání v adminu. Klient jinak jen čte.
+    match /results/{matchId} {
+      allow read: if true;
+      allow create, update: if isValidResult();
+      allow delete: if false;
+    }
+
+    // Tip na vítěze: winnerBets/{player}
+    match /winnerBets/{player} {
+      allow read: if true;
+      allow create, update: if isValidWinner();
+      allow delete: if false;
+    }
+
+    // Cokoli jiného: zakázat.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidBet() {
+      let d = request.resource.data;
+      return d.homeScore is int && d.awayScore is int
+        && d.homeScore >= 0 && d.homeScore <= 20
+        && d.awayScore >= 0 && d.awayScore <= 20;
+    }
+
+    function isValidResult() {
+      let d = request.resource.data;
+      return d.homeScore is int && d.awayScore is int
+        && d.homeScore >= 0 && d.homeScore <= 50
+        && d.awayScore >= 0 && d.awayScore <= 50;
+    }
+
+    function isValidWinner() {
+      let d = request.resource.data;
+      return d.team is string && d.team.size() > 0 && d.team.size() < 40;
+    }
+  }
+}

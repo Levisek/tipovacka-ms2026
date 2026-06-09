@@ -5,6 +5,7 @@
  */
 import { MATCHES } from '../config/schedule.js'
 import { STORAGE_KEYS } from '../config/constants.js'
+import { subscribeResults, writeResult } from './resultsFirestore.js'
 
 // Klonuj výchozí data
 const matchMap = new Map()
@@ -67,7 +68,8 @@ export function getMatchDays() {
 }
 
 /**
- * Aktualizuje výsledek zápasu
+ * Aktualizuje výsledek zápasu (ruční zadání v adminu).
+ * Píše write-through do Firestore, aby ho viděli všichni hráči.
  */
 export function updateResult(id, homeScore, awayScore, status = 'finished') {
   const match = matchMap.get(id)
@@ -77,6 +79,43 @@ export function updateResult(id, homeScore, awayScore, status = 'finished') {
   match.status = status
   persist()
   notify()
+  // Sdílení napříč zařízeními — fire & forget
+  writeResult(id, homeScore, awayScore, status).catch(e =>
+    console.error('writeResult do Firestore selhal:', e)
+  )
+}
+
+/**
+ * Aplikuje výsledky z Firestore snapshotu do storu.
+ */
+function applyResults(results) {
+  let changed = false
+  for (const [id, r] of Object.entries(results)) {
+    const match = matchMap.get(id)
+    if (!match) continue
+    if (match.homeScore !== r.homeScore || match.awayScore !== r.awayScore || match.status !== r.status) {
+      match.homeScore = r.homeScore
+      match.awayScore = r.awayScore
+      match.status = r.status
+      changed = true
+    }
+  }
+  if (changed) {
+    persist()
+    notify()
+  }
+}
+
+/**
+ * Spustí realtime synchronizaci výsledků z Firestore.
+ * Volá se jednou při startu (main.js). localStorage slouží jen jako
+ * offline cache pro okamžité vykreslení, Firestore je source of truth.
+ */
+let _resultsUnsub = null
+export function initResultsSync() {
+  if (_resultsUnsub) return _resultsUnsub
+  _resultsUnsub = subscribeResults(applyResults)
+  return _resultsUnsub
 }
 
 /**

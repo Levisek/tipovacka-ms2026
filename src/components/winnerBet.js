@@ -1,6 +1,6 @@
 import { TEAMS } from '../config/teams.js'
 import { MATCHES } from '../config/schedule.js'
-import { isPastDeadline } from '../utils/date.js'
+import { isPastDeadline, bettingDayOf } from '../utils/date.js'
 import { placeWinnerBet, getWinnerBets } from '../services/betService.js'
 import { getPlayerName } from '../services/auth.js'
 import { RULES_2026 } from '../services/standingsService.js'
@@ -8,10 +8,10 @@ import { RULES_2026 } from '../services/standingsService.js'
 /**
  * Vrátí true pokud už proběhl deadline prvního zápasu turnaje
  */
-function isWinnerLocked() {
+export function isWinnerLocked() {
   const firstMatch = [...MATCHES].sort((a, b) => (a.date || '').localeCompare(b.date || ''))[0]
   if (!firstMatch) return false
-  return isPastDeadline(firstMatch.date)
+  return isPastDeadline(bettingDayOf(firstMatch.date, firstMatch.kickoff))
 }
 
 /**

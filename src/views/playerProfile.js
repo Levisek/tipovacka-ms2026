@@ -1,5 +1,6 @@
 import { computePlayerStats } from '../services/playerStatsService.js'
-import { getPlayers } from '../services/auth.js'
+import { getPlayers, getPlayerName } from '../services/auth.js'
+import { isWinnerLocked } from '../components/winnerBet.js'
 import { HOME_TEAM } from '../config/teams.js'
 import archive2022 from '../config/archive2022.json'
 import archiveEuro2024 from '../config/archiveEuro2024.json'
@@ -25,6 +26,8 @@ export async function renderPlayerProfile(container, params) {
     return
   }
   const isCurrentPlayer = getPlayers().includes(playerName)
+  // Cizí tip na vítěze je skrytý do deadline; svůj vlastní vidím vždy.
+  const winnerRevealed = isWinnerLocked() || playerName === getPlayerName()
 
   container.innerHTML = `
     <div class="section-header">
@@ -90,7 +93,7 @@ export async function renderPlayerProfile(container, params) {
       ${cur.winnerBet2026 ? `
         <p style="margin-top: 12px; font-size: 14px;">
           <strong>Tip na vítěze MS 2026:</strong>
-          <span style="color: var(--color-gold);">${cur.winnerBet2026}${cur.winnerBet2026 === HOME_TEAM ? ' 🇨🇿' : ''}</span>
+          <span style="color: var(--color-gold);">${winnerRevealed ? `${cur.winnerBet2026}${cur.winnerBet2026 === HOME_TEAM ? ' 🇨🇿' : ''}` : '🔒 tipnul (skryto do deadline)'}</span>
         </p>
       ` : '<p style="margin-top: 12px; font-size: 13px; color: var(--color-text-dim);">Zatím netipnul vítěze turnaje.</p>'}
 

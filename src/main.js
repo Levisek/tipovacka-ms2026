@@ -51,14 +51,15 @@ if (!getPlayerName()) {
   startRouter()
 }
 
-// Auto-sync s football-data.org API
-import { startPolling, fetchSchedule } from './services/resultService.js'
+// Výsledky: realtime z Firestore (plní je serverový cron sync-results.php).
+// Klient už netahá výsledky z football-data přímo — odpadl manuál button
+// i rozjeté výsledky per-zařízení.
+import { initResultsSync } from './services/matchStore.js'
+initResultsSync()
 
-// 1) Při startu stáhni aktuální rozpis (časy + týmy po losování)
+// Rozpis (časy + týmy po losování KO) zatím pořád z API na klientovi.
+import { fetchSchedule } from './services/resultService.js'
 fetchSchedule().catch(() => {})
-
-// 2) Auto-polling výsledků (každých 60s)
-startPolling()
 
 // Build marker — změna tohoto řetězce vynutí nový hash v názvu bundlu
 // (řeší občasnou corruptnutou cache entry v ATS edge cachi).

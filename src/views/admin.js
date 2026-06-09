@@ -6,7 +6,7 @@ import { getTeam } from '../config/teams.js'
 import * as store from '../services/matchStore.js'
 import { placeBet } from '../services/betService.js'
 import { RULES_2026 } from '../services/standingsService.js'
-import { ADMIN_PIN, ADMIN_SESSION_KEY, MAX_SCORE, STORAGE_KEYS } from '../config/constants.js'
+import { ADMIN_SESSION_KEY, MAX_SCORE, STORAGE_KEYS } from '../config/constants.js'
 
 const GROUP_BET = RULES_2026.groupBet
 const KO_MATCH_BET = RULES_2026.koMatchBet
@@ -31,13 +31,25 @@ export function renderAdmin(container) {
         </div>
       </div>
     `
-    document.getElementById('btn-admin-login').addEventListener('click', () => {
+    document.getElementById('btn-admin-login').addEventListener('click', async () => {
       const pin = document.getElementById('admin-pin').value
-      if (pin === ADMIN_PIN) {
-        sessionStorage.setItem(ADMIN_SESSION_KEY, 'true')
-        renderAdmin(container)
-      } else {
-        document.getElementById('pin-error').textContent = 'Špatné heslo'
+      const err = document.getElementById('pin-error')
+      err.textContent = 'Ověřuji…'
+      try {
+        const res = await fetch('/tipovacka/api/admin-auth.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pin }),
+        })
+        const data = await res.json()
+        if (data.ok) {
+          sessionStorage.setItem(ADMIN_SESSION_KEY, 'true')
+          renderAdmin(container)
+        } else {
+          err.textContent = 'Špatné heslo'
+        }
+      } catch (e) {
+        err.textContent = 'Chyba ověření'
       }
     })
     document.getElementById('admin-pin').addEventListener('keydown', e => {
@@ -107,12 +119,12 @@ export function renderAdmin(container) {
     <div class="admin-section">
       <h2>Synchronizace s football-data.org</h2>
       <p style="color: var(--color-text-dim); margin-bottom: 12px;">
-        Stáhne data z oficiálního API. Rozpis zaktualizuje časy a týmy
-        (např. po losování KO fáze), výsledky stáhne aktuální skóre.
+        <strong>Výsledky se synchronizují automaticky</strong> serverovým cronem
+        (každých 5 min) přímo do Firebase — vidí je všichni hráči, nemusíš nic klikat.
+        Tlačítko níže jen stáhne aktuální rozpis (časy a týmy, např. po losování KO fáze).
       </p>
       <div style="display: flex; gap: 8px; flex-wrap: wrap;">
         <button class="btn-admin" id="btn-seed-schedule">Stáhnout rozpis</button>
-        <button class="btn-admin" id="btn-seed">Stáhnout výsledky</button>
       </div>
       <div id="seed-status" style="margin-top: 8px;"></div>
     </div>
@@ -299,27 +311,6 @@ export function renderAdmin(container) {
       status.textContent = `✓ Uloženo ${saved} tipů na ${firstMatch.home} vs ${firstMatch.away}`
       status.style.color = 'var(--color-open)'
       loadBets()
-    } catch (e) {
-      status.textContent = '✗ Chyba: ' + e.message
-      status.style.color = 'var(--color-locked)'
-    }
-  })
-
-  // Stáhnout výsledky z API
-  document.getElementById('btn-seed').addEventListener('click', async () => {
-    const status = document.getElementById('seed-status')
-    status.textContent = 'Stahuji výsledky z API…'
-    status.style.color = 'var(--color-text-dim)'
-    try {
-      const { fetchAllResults } = await import('../services/resultService.js')
-      const result = await fetchAllResults()
-      if (result.error) {
-        status.textContent = '✗ ' + result.error
-        status.style.color = 'var(--color-locked)'
-      } else {
-        status.textContent = `✓ Spárováno ${result.matched} zápasů, aktualizováno ${result.updated} výsledků.`
-        status.style.color = 'var(--color-open)'
-      }
     } catch (e) {
       status.textContent = '✗ Chyba: ' + e.message
       status.style.color = 'var(--color-locked)'

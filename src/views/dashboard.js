@@ -3,7 +3,7 @@ import { renderMatchCard } from '../components/matchCard.js'
 import { initBetForms } from '../components/betForm.js'
 import { renderWinnerBet, initWinnerBet } from '../components/winnerBet.js'
 import { getPlayerName } from '../services/auth.js'
-import { formatDateFull, getDeadlineTime, isPastDeadline } from '../utils/date.js'
+import { formatDateFull, getDeadlineTime, isPastDeadline, bettingDayOf, bettingTime } from '../utils/date.js'
 import { getPlayerBet, getAllBets, getWinnerBets, onBetsChange } from '../services/betService.js'
 import { computeLiveStandings } from '../services/standingsService.js'
 import { startCountdown } from '../components/countdown.js'
@@ -34,37 +34,38 @@ export function renderDashboard(container) {
   const current = []
   const upcoming = []
 
-  // Najdi nejbližší den s neodehranými zápasy
+  // Najdi nejbližší FOTBALOVÝ den s neodehranými zápasy (noční zápasy patří
+  // k předchozímu večeru — viz bettingDayOf)
   const unplayedDates = [...new Set(
     matches
       .filter(m => m.status !== 'finished' && m.homeScore === null)
-      .map(m => m.date)
+      .map(m => bettingDayOf(m.date, m.kickoff))
   )].sort()
   const currentDay = unplayedDates[0] || null
 
   for (const m of matches) {
     if (m.status === 'finished' || (m.homeScore !== null && m.homeScore !== undefined)) {
       finished.push(m)
-    } else if (currentDay && m.date === currentDay) {
+    } else if (currentDay && bettingDayOf(m.date, m.kickoff) === currentDay) {
       current.push(m)
     } else {
       upcoming.push(m)
     }
   }
 
-  // Seřaď current zápasy chronologicky (podle kickoff)
-  current.sort((a, b) => a.kickoff.localeCompare(b.kickoff))
+  // Seřaď current zápasy chronologicky v rámci fotbalového dne (večer < noc)
+  current.sort((a, b) => bettingTime(a.kickoff) - bettingTime(b.kickoff))
 
-  // Seskup po dnech a uvnitř každého dne seřaď chronologicky
+  // Seskup po fotbalových dnech a uvnitř každého dne seřaď chronologicky
   const groupByDate = (arr) => {
     const map = new Map()
     arr.forEach(m => {
-      if (!map.has(m.date)) map.set(m.date, [])
-      map.get(m.date).push(m)
+      const bd = bettingDayOf(m.date, m.kickoff)
+      if (!map.has(bd)) map.set(bd, [])
+      map.get(bd).push(m)
     })
-    // Seřaď zápasy v každém dni podle kickoff
     for (const matches of map.values()) {
-      matches.sort((a, b) => a.kickoff.localeCompare(b.kickoff))
+      matches.sort((a, b) => bettingTime(a.kickoff) - bettingTime(b.kickoff))
     }
     return map
   }
@@ -189,10 +190,13 @@ export function renderDashboard(container) {
       try {
         const betService = await import('../services/betService.js')
         await betService.placeBet(matchId, player, homeScore, awayScore)
-        // Překresli dashboard s aktuálními tipy
+        // Ukaž tip hned (než doběhne odložený reload z Firestore) — jinak
+        // se formulář překreslí prázdný a vypadá to, že se nic neuložilo.
+        _betCache[matchId] = { home: homeScore, away: awayScore }
         renderDashboard(container)
       } catch (e) {
-        console.warn('Firebase offline')
+        // NESPOLYKAT chybu potichu — kámoš musí vidět, proč se tip neuložil.
+        alert('Nepodařilo se uložit tip: ' + (e && e.message ? e.message : e))
       }
     })
   }

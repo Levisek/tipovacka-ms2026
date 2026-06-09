@@ -1,30 +1,13 @@
-import { MATCHES } from '../config/schedule.js'
 import * as store from './matchStore.js'
-import { POLLING_INTERVAL_MS, CEST_OFFSET_HOURS } from '../config/constants.js'
+import { CEST_OFFSET_HOURS } from '../config/constants.js'
 
-// PHP proxy na našem serveru → footballdata-org (řeší CORS + skrývá API key)
-// V dev (localhost) volá API přímo, v produkci přes /api/wc.php
-const isDev = typeof window !== 'undefined' && window.location.hostname === 'localhost'
-const API_PROXY = isDev
-  ? 'https://api.football-data.org/v4'
-  : '/tipovacka/api/wc.php?path='
+// Vždy přes PHP proxy na našem serveru (řeší CORS + drží API klíč SERVEROVĚ).
+// API klíč NIKDY není v klientském buildu.
+const API_PROXY = '/tipovacka/api/wc.php?path='
 
-// API key se používá jen v dev (přímý fetch), v produkci je v PHP
-const API_KEY = 'db35374c3fe748069840d3f664bfda3c'
-
-// Helper: postaví URL pro fetch
 function apiUrl(path) {
-  if (isDev) return API_PROXY + path
-  // Produkce přes proxy: path se předá jako query parametr
   return API_PROXY + encodeURIComponent(path)
 }
-
-// Helper: hlavičky pro fetch (jen v dev potřebujeme X-Auth-Token)
-function apiHeaders() {
-  return isDev ? { 'X-Auth-Token': API_KEY } : {}
-}
-
-let pollingInterval = null
 
 /**
  * Mapování anglických názvů z API na české názvy v našem systému
@@ -61,29 +44,25 @@ function mapName(apiName) {
 }
 
 /**
- * Najdi náš zápas odpovídající API zápasu (podle týmů a data)
+ * Převede UTC ISO string na CEST date+time string
  */
-function findMatch(apiHome, apiAway, apiDate) {
-  const home = mapName(apiHome)
-  const away = mapName(apiAway)
-  // Hledej v skupinových zápasech
-  return MATCHES.find(m =>
-    m.home === home && m.away === away
-  ) || MATCHES.find(m =>
-    // Zkus i opačné pořadí
-    m.home === away && m.away === home
-  )
+function utcToCest(utcIsoStr) {
+  const utc = new Date(utcIsoStr)
+  // Letní čas v ČR je UTC+2 (CEST). MS 2026 hraje v červnu/červenci → vždy CEST.
+  const cest = new Date(utc.getTime() + CEST_OFFSET_HOURS * 3600000)
+  const date = cest.toISOString().slice(0, 10)
+  const time = cest.toISOString().slice(11, 16)
+  return { date, time }
 }
 
 /**
  * Stáhne kompletní rozpis (datum, kickoff, týmy) z API
- * a aktualizuje matchStore přes bulkUpdateSchedule
+ * a aktualizuje matchStore přes bulkUpdateSchedule.
+ * Výsledky zápasů NEŘEŠÍ — ty plní serverový cron do Firestore.
  */
 export async function fetchSchedule() {
   try {
-    const res = await fetch(apiUrl('/competitions/WC/matches'), {
-      headers: apiHeaders()
-    })
+    const res = await fetch(apiUrl('/competitions/WC/matches'))
     if (!res.ok) throw new Error(`API ${res.status}: ${res.statusText}`)
     const data = await res.json()
 
@@ -127,14 +106,14 @@ export async function fetchSchedule() {
       'LAST_16': 'R16',
       'QUARTER_FINALS': 'QF',
       'SEMI_FINALS': 'SF',
-      'THIRD_PLACE': '3rd',
+      'THIRD_PLACE': '3RD',
       'FINAL': 'F',
     }
     for (const [apiStage, prefix] of Object.entries(stageMapping)) {
       const matches = koByStage[apiStage] || []
       matches.sort((a, b) => a.utcDate.localeCompare(b.utcDate))
       matches.forEach((m, i) => {
-        // 3rd a F mají jen jedno ID bez čísla
+        // 3RD a F mají jen jedno ID bez čísla
         const id = (apiStage === 'THIRD_PLACE' || apiStage === 'FINAL')
           ? prefix
           : `${prefix}-${i + 1}`
@@ -155,133 +134,4 @@ export async function fetchSchedule() {
     console.error('API chyba (fetchSchedule):', e)
     return { changed: 0, error: e.message }
   }
-}
-
-/**
- * Převede UTC ISO string na CEST/CEST date+time string
- */
-function utcToCest(utcIsoStr) {
-  const utc = new Date(utcIsoStr)
-  // Letní čas v ČR je UTC+2 (CEST). MS 2026 hraje v červnu/červenci → vždy CEST.
-  const cest = new Date(utc.getTime() + CEST_OFFSET_HOURS * 3600000)
-  const date = cest.toISOString().slice(0, 10)
-  const time = cest.toISOString().slice(11, 16)
-  return { date, time }
-}
-
-/**
- * Stáhne VŠECHNY zápasy MS z API a aktualizuje store
- */
-export async function fetchAllResults() {
-  if (!API_KEY) {
-    console.warn('Chybí API klíč — zadej ho v src/services/resultService.js')
-    return { updated: 0, error: 'Chybí API klíč' }
-  }
-
-  try {
-    const res = await fetch(apiUrl('/competitions/WC/matches'), {
-      headers: apiHeaders()
-    })
-    if (!res.ok) throw new Error(`API ${res.status}: ${res.statusText}`)
-    const data = await res.json()
-
-    const updates = []
-    let matched = 0
-
-    for (const apiMatch of data.matches) {
-      const homeName = apiMatch.homeTeam?.name
-      const awayName = apiMatch.awayTeam?.name
-      if (!homeName || !awayName) continue
-
-      const ourMatch = findMatch(homeName, awayName, apiMatch.utcDate?.slice(0, 10))
-      if (!ourMatch) continue
-
-      matched++
-
-      let status = 'scheduled'
-      if (apiMatch.status === 'FINISHED') status = 'finished'
-      else if (apiMatch.status === 'IN_PLAY' || apiMatch.status === 'PAUSED') status = 'live'
-
-      const homeScore = apiMatch.score?.fullTime?.home ?? null
-      const awayScore = apiMatch.score?.fullTime?.away ?? null
-
-      updates.push({
-        id: ourMatch.id,
-        homeScore,
-        awayScore,
-        status
-      })
-    }
-
-    store.bulkUpdate(updates)
-
-    return { updated: updates.filter(u => u.homeScore !== null).length, matched, total: data.matches.length }
-  } catch (e) {
-    console.error('API chyba:', e)
-    return { updated: 0, error: e.message }
-  }
-}
-
-/**
- * Stáhne jen dnešní výsledky (šetří API volání)
- */
-export async function fetchTodayResults() {
-  if (!API_KEY) return { updated: 0, error: 'Chybí API klíč' }
-
-  try {
-    const today = new Date().toISOString().slice(0, 10)
-    const res = await fetch(apiUrl(`/competitions/WC/matches?dateFrom=${today}&dateTo=${today}`), {
-      headers: apiHeaders()
-    })
-    if (!res.ok) throw new Error(`API ${res.status}`)
-    const data = await res.json()
-
-    const updates = []
-    for (const apiMatch of data.matches) {
-      const ourMatch = findMatch(apiMatch.homeTeam?.name, apiMatch.awayTeam?.name)
-      if (!ourMatch) continue
-
-      let status = 'scheduled'
-      if (apiMatch.status === 'FINISHED') status = 'finished'
-      else if (apiMatch.status === 'IN_PLAY' || apiMatch.status === 'PAUSED') status = 'live'
-
-      updates.push({
-        id: ourMatch.id,
-        homeScore: apiMatch.score?.fullTime?.home ?? null,
-        awayScore: apiMatch.score?.fullTime?.away ?? null,
-        status
-      })
-    }
-
-    store.bulkUpdate(updates)
-    return { updated: updates.filter(u => u.homeScore !== null).length }
-  } catch (e) {
-    return { updated: 0, error: e.message }
-  }
-}
-
-/**
- * Spustí polling výsledků (interval z constants.js)
- */
-export function startPolling() {
-  if (pollingInterval) return
-  fetchTodayResults()
-  pollingInterval = setInterval(fetchTodayResults, POLLING_INTERVAL_MS)
-}
-
-/**
- * Zastaví polling
- */
-export function stopPolling() {
-  if (pollingInterval) {
-    clearInterval(pollingInterval)
-    pollingInterval = null
-  }
-}
-
-/**
- * Ruční zadání výsledku
- */
-export function submitResult(matchId, homeScore, awayScore) {
-  store.updateResult(matchId, homeScore, awayScore, 'finished')
 }
