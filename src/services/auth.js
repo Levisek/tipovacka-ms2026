@@ -2,7 +2,7 @@ import { STORAGE_KEYS } from '../config/constants.js'
 const STORAGE_KEY = STORAGE_KEYS.PLAYER
 
 const PLAYERS = [
-  'Levis', 'Schmutzik', 'Kečup', 'Šruby',
+  'Levis', 'Schmutzik', 'Marinor', 'Šruby',
   'Šinďa', 'Luki', 'Dvory', 'Miky', 'Maro'
 ]
 

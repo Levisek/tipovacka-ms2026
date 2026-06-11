@@ -128,6 +128,10 @@ export async function computeLiveStandings() {
   let totalDeposit = 0
   let totalWon = 0
 
+  // Historie banku per zápas — odvozená z výpočtu, nikam se neukládá.
+  // { [matchId]: { pool, carryIn, share, winners } } — winners prázdné = bank přešel dál
+  const bankEvents = {}
+
   // Zpracuj skupiny chronologicky
   for (const match of groupMatches) {
     const bets = allBetsMap[match.id] || {}
@@ -151,6 +155,12 @@ export async function computeLiveStandings() {
         const t = bets[p]
         return t && t.home === match.homeScore && t.away === match.awayScore
       })
+      bankEvents[match.id] = {
+        pool: matchPool,
+        carryIn: bankCarry,
+        share: winners.length > 0 ? matchPool / winners.length : 0,
+        winners: [...winners],
+      }
       if (winners.length > 0) {
         const share = matchPool / winners.length
         winners.forEach(w => {
@@ -188,6 +198,12 @@ export async function computeLiveStandings() {
         const t = bets[p]
         return t && t.home === match.homeScore && t.away === match.awayScore
       })
+      bankEvents[match.id] = {
+        pool: matchPool,
+        carryIn: bankCarry,
+        share: winners.length > 0 ? matchPool / winners.length : 0,
+        winners: [...winners],
+      }
       if (winners.length > 0) {
         const share = matchPool / winners.length
         winners.forEach(w => {
@@ -280,5 +296,6 @@ export async function computeLiveStandings() {
     winnerBets,
     winnerBank,
     eliminations,
+    bankEvents,
   }
 }

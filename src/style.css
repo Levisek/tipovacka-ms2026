@@ -40,6 +40,7 @@
   /* Spacing */
   --radius: 8px;
   --radius-lg: 12px;
+  --radius-pill: 999px;
   --gap: 16px;
   --gap-sm: 8px;
 
@@ -822,6 +823,34 @@ h3 { font-size: 16px; font-weight: 500; }
   color: var(--color-gold-light);
 }
 
+/* Historie banku v detailu zápasu */
+.bank-history {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  margin-top: 16px;
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+}
+
+.bank-history.won {
+  background: var(--color-gold-dim);
+  border: 1px solid var(--color-gold);
+  color: var(--color-text);
+}
+
+.bank-history.won strong {
+  font-family: var(--font-heading);
+  color: var(--color-gold-light);
+}
+
+.bank-history.carried {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-dim);
+}
+
 /* ===== COUNTDOWN ===== */
 .countdown {
   font-family: var(--font-heading);
@@ -832,6 +861,48 @@ h3 { font-size: 16px; font-weight: 500; }
 .countdown.urgent {
   color: var(--color-live);
   animation: pulse 1s infinite;
+}
+
+/* Kompaktní pill verze — countdown v detailu zápasu (mini deadline-banner) */
+.countdown-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: var(--color-open-bg);
+  border: 1px solid var(--color-open);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-open);
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.countdown-pill::before {
+  content: '⏱';
+  font-size: 13px;
+}
+
+.countdown-pill.urgent {
+  background: var(--color-locked-bg);
+  border-color: var(--color-locked);
+  color: var(--color-locked);
+  animation: pulse 1s infinite;
+}
+
+/* Uzavřeno — text už obsahuje 🔒, ikonu hodin skryj */
+.countdown-pill.locked {
+  background: var(--color-locked-bg);
+  border-color: var(--color-locked);
+  color: var(--color-locked);
+}
+
+.countdown-pill.locked::before {
+  content: none;
 }
 
 @keyframes pulse {
@@ -1176,12 +1247,24 @@ h3 { font-size: 16px; font-weight: 500; }
 }
 
 .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
   color: var(--color-text-dim);
   text-decoration: none;
   font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
 }
 
-.back-link:hover { color: var(--color-text); }
+.back-link:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
 
 .match-detail-section {
   margin-top: 24px;

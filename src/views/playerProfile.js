@@ -54,7 +54,7 @@ export async function renderPlayerProfile(container, params) {
   container.innerHTML = `
     <div class="section-header">
       <h1>👤 ${stats.name}</h1>
-      <a href="#/standings" style="color: var(--color-text-dim); font-size: 13px;">← zpět</a>
+      <a href="#/standings" class="back-link">← Zpět</a>
     </div>
 
     <!-- AKTUÁLNÍ MS 2026 -->
