@@ -13,8 +13,12 @@ export function initPWA() {
 function registerSW() {
   if (!('serviceWorker' in navigator)) return
   window.addEventListener('load', () => {
+    // ?v= obchází ATS edge cache — ta držela sw.js immutable rok (Age 130k+
+    // při incidentu 2026-06-12), takže nasazené změny SW ke klientům nešly.
+    // Při změně sw.js zvedni verzi. (.htaccess už má pro sw.js no-cache,
+    // ale starou cache entry bez query to nezneplatní.)
     navigator.serviceWorker
-      .register('/tipovacka/sw.js', { scope: '/tipovacka/' })
+      .register('/tipovacka/sw.js?v=20260612', { scope: '/tipovacka/' })
       .catch((err) => console.warn('[pwa] SW registrace selhala:', err))
   })
 }

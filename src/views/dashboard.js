@@ -254,6 +254,23 @@ export function renderDashboard(container) {
   }
 }
 
+// Chyby načítání NEpolykat potichu — console.error + viditelný toast,
+// ať je hned jasné PROČ jsou bank/tipy prázdné (incident 2026-06-12:
+// klientovi umřelo spojení na Firestore a appka mlčela).
+function reportLoadError(what, e) {
+  console.error(`[tipovacka] nepodařilo se načíst ${what}:`, e)
+  let el = document.getElementById('data-error-toast')
+  if (!el) {
+    el = document.createElement('div')
+    el.id = 'data-error-toast'
+    el.className = 'data-error-toast'
+    document.body.appendChild(el)
+  }
+  el.textContent = `⚠ Nepodařilo se načíst ${what} — zkontroluj připojení`
+  clearTimeout(el._hideTimer)
+  el._hideTimer = setTimeout(() => el.remove(), 8000)
+}
+
 let _bankLoadInProgress = false
 async function loadBankAndRerender(container) {
   if (_bankLoadInProgress) return
@@ -265,7 +282,9 @@ async function loadBankAndRerender(container) {
       _currentBank = newBank
       renderDashboard(container)
     }
-  } catch (e) {} finally {
+  } catch (e) {
+    reportLoadError('bank', e)
+  } finally {
     _bankLoadInProgress = false
   }
 }
@@ -280,12 +299,15 @@ async function loadWinnerBetsAndRerender(container) {
       _winnerBets = bets
       renderDashboard(container)
     }
-  } catch (e) {} finally {
+  } catch (e) {
+    reportLoadError('tipy na vítěze', e)
+  } finally {
     _winnerLoadInProgress = false
   }
 }
 
 let _loadInProgress = false
+let _betsErrorShown = false
 async function loadBetsAndRerender(matches, player, container) {
   if (_loadInProgress) return
   _loadInProgress = true
@@ -319,10 +341,16 @@ async function loadBetsAndRerender(matches, player, container) {
           delete _allBetsCache[m.id]
           changed = true
         }
-      } catch (e) {}
+      } catch (e) {
+        if (!_betsErrorShown) {
+          _betsErrorShown = true // toast jen jednou per load, ne 72×
+          reportLoadError('tipy', e)
+        }
+      }
     }))
   } finally {
     _loadInProgress = false
+    _betsErrorShown = false
   }
   if (changed) renderDashboard(container)
 }

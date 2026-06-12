@@ -22,6 +22,15 @@
         Header set Cache-Control "public, max-age=2592000"
     </FilesMatch>
 
+    # --- Service worker ---
+    # sw.js NESMÍ být immutable: browser si při update SW obchází vlastní
+    # HTTP cache, ale požadavek jde přes ATS edge — a ten by rok servíroval
+    # starou verzi, takže by se změny SW ke klientům nikdy nedostaly.
+    # (Musí být AŽ ZA obecným js pravidlem výše — pozdější Header set vyhrává.)
+    <FilesMatch "^sw\.js$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+
     # --- index.html ---
     # HTML musí mít vždy čerstvé, jinak uživatel drží staré odkazy
     # na neexistující chunky.

@@ -27,6 +27,10 @@ self.addEventListener('fetch', (e) => {
   const req = e.request
   if (req.method !== 'GET') return
 
+  // Cizí originy (Firestore WebChannel, Google APIs…) nech ÚPLNĚ být —
+  // SW nesmí stát v cestě long-pollingu, jinak může rozbít realtime data.
+  if (new URL(req.url).origin !== self.location.origin) return
+
   const isNavigation = req.mode === 'navigate'
   if (isNavigation) {
     e.respondWith(
