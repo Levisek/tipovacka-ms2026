@@ -9,7 +9,7 @@ import { subscribeResults, writeResult } from './resultsFirestore.js'
 
 // Klonuj výchozí data
 const matchMap = new Map()
-MATCHES.forEach(m => matchMap.set(m.id, { ...m, homeScore: null, awayScore: null, status: 'scheduled', minute: null }))
+MATCHES.forEach(m => matchMap.set(m.id, { ...m, homeScore: null, awayScore: null, status: 'scheduled', minute: null, updatedAt: null }))
 
 // Načti uložené výsledky z localStorage
 const STORAGE_KEY = STORAGE_KEYS.RESULTS
@@ -94,13 +94,18 @@ function applyResults(results) {
     const match = matchMap.get(id)
     if (!match) continue
     const minute = r.minute ?? null
-    if (match.homeScore !== r.homeScore || match.awayScore !== r.awayScore || match.status !== r.status || match.minute !== minute) {
+    const updatedAt = r.updatedAt ?? null
+    // updatedAt budí re-render jen u live (tiká od něj minuta) — u finished
+    // by jinak každý hodinový cron přepis zbytečně překresloval dashboard
+    if (match.homeScore !== r.homeScore || match.awayScore !== r.awayScore || match.status !== r.status
+        || match.minute !== minute || (minute !== null && match.updatedAt !== updatedAt)) {
       match.homeScore = r.homeScore
       match.awayScore = r.awayScore
       match.status = r.status
       match.minute = minute
       changed = true
     }
+    match.updatedAt = updatedAt
   }
   if (changed) {
     persist()
@@ -191,7 +196,7 @@ function persist() {
   const data = {}
   for (const [id, m] of matchMap) {
     if (m.homeScore !== null) {
-      data[id] = { homeScore: m.homeScore, awayScore: m.awayScore, status: m.status, minute: m.minute ?? null }
+      data[id] = { homeScore: m.homeScore, awayScore: m.awayScore, status: m.status, minute: m.minute ?? null, updatedAt: m.updatedAt ?? null }
     }
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data))

@@ -255,10 +255,11 @@ if (count($missing) > 0 || count($needClock) > 0) {
         return $best;
     };
 
-    // Minuta z ESPN eventu — display-ready ("57'", "45'+2'", "HT")
+    // Minuta z ESPN eventu — display-ready ("57'", "45'+2'", "HT", "PEN")
     $espnMinute = function ($ev) {
         $tName = $ev['status']['type']['name'] ?? '';
         if ($tName === 'STATUS_HALFTIME') return 'HT';
+        if (strpos($tName, 'SHOOTOUT') !== false || strpos($tName, 'PENALT') !== false) return 'PEN';
         $clock = trim($ev['status']['displayClock'] ?? '');
         if ($clock === '' || $clock === "0'") return null;
         return is_numeric($clock) ? $clock . "'" : $clock;

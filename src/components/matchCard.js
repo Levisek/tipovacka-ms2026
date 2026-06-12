@@ -4,6 +4,44 @@ import { STAGE_NAMES } from '../config/schedule.js'
 import { MAX_SCORE } from '../config/constants.js'
 
 /**
+ * Label live badge: "Živě 57'" / "Poločas" / "Prodloužení 105'" / "Penalty".
+ * U čistě číselné minuty přičítá čas uplynulý od posledního syncu (updatedAt),
+ * ať badge mezi syncy (~4 min throttle) nezamrzá. Přesné nastavení neznáme,
+ * takže po překročení hranice půle ukazuje "45'+" / "90'+" / "120'+".
+ */
+export function liveBadgeLabel(minute, updatedAt) {
+  if (minute === 'HT') return 'Poločas'
+  if (minute === 'PEN') return 'Penalty'
+  if (!minute) return 'Živě'
+  const m = /^(\d+)'$/.exec(minute)
+  if (!m) return `Živě ${minute}` // "45'+2'" apod. — netikat
+  const synced = parseInt(m[1], 10)
+  let shown = synced
+  if (updatedAt) {
+    const elapsedMin = Math.floor((Date.now() - new Date(updatedAt).getTime()) / 60000)
+    if (elapsedMin > 0 && elapsedMin < 60) shown += elapsedMin // sanity cap — starý updatedAt netikat do nesmyslů
+  }
+  let label = `${shown}'`
+  if (synced <= 45 && shown > 45) label = "45'+"
+  else if (synced > 45 && synced <= 90 && shown > 90) label = "90'+"
+  else if (shown > 120) label = "120'+"
+  return (synced > 90 ? 'Prodloužení ' : 'Živě ') + label
+}
+
+/**
+ * Globální ticker: jednou za 30 s přepočítá texty všech live badge na
+ * stránce z data atributů — bez re-renderu dashboardu (ten by znovu
+ * odpálil Firestore loady, viz incident 2026-04-11).
+ */
+export function initLiveMinuteTicker() {
+  setInterval(() => {
+    document.querySelectorAll('.badge-live[data-minute]').forEach(el => {
+      el.textContent = liveBadgeLabel(el.dataset.minute || null, el.dataset.updated || null)
+    })
+  }, 30 * 1000)
+}
+
+/**
  * Vykreslí kartu zápasu
  * @param {Object} match - data zápasu (z schedule.js nebo Firestore)
  * @param {Object} options - { showBetForm, bet, onBet, allBets }
@@ -23,11 +61,8 @@ export function renderMatchCard(match, options = {}) {
   if (hasResult && !isLive) {
     statusBadge = '<span class="badge badge-finished">Hotovo</span>'
   } else if (isLive) {
-    // minute: "57'" / "45'+2'" / "HT" (poločasová pauza) — plní sync server
-    const liveLabel = match.minute === 'HT'
-      ? 'Poločas'
-      : 'Živě' + (match.minute ? ` ${match.minute}` : '')
-    statusBadge = `<span class="badge badge-live">${liveLabel}</span>`
+    // minute plní sync server; data atributy čte initLiveMinuteTicker
+    statusBadge = `<span class="badge badge-live" data-minute="${match.minute || ''}" data-updated="${match.updatedAt || ''}">${liveBadgeLabel(match.minute, match.updatedAt)}</span>`
   } else if (pastDeadline) {
     statusBadge = '<span class="badge badge-locked">Uzavřeno</span>'
   } else {

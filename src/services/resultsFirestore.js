@@ -26,7 +26,8 @@ export function subscribeResults(callback) {
             homeScore: x.homeScore ?? null,
             awayScore: x.awayScore ?? null,
             status: x.status || 'finished',
-            minute: x.minute ?? null, // "57'" / "45'+2'" / "HT" — jen u live
+            minute: x.minute ?? null, // "57'" / "45'+2'" / "HT" / "PEN" — jen u live
+            updatedAt: x.updatedAt ?? null, // pro lokální tikání minuty mezi syncy
           }
         })
         callback(results)

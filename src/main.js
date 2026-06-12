@@ -70,7 +70,11 @@ fetchSchedule().catch(() => {})
 
 // Build marker — změna tohoto řetězce vynutí nový hash v názvu bundlu
 // (řeší občasnou corruptnutou cache entry v ATS edge cachi).
-console.log('[tipovacka] build 2026-06-12-b live-minute')
+console.log('[tipovacka] build 2026-06-12-c minute-ticker')
+
+// Live badge: minuta lokálně tiká mezi syncy (bez re-renderu)
+import { initLiveMinuteTicker } from './components/matchCard.js'
+initLiveMinuteTicker()
 
 // PWA: registrace service workeru + výzva k instalaci na plochu.
 import { initPWA } from './services/pwa.js'
