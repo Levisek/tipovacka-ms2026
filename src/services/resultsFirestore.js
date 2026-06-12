@@ -26,6 +26,7 @@ export function subscribeResults(callback) {
             homeScore: x.homeScore ?? null,
             awayScore: x.awayScore ?? null,
             status: x.status || 'finished',
+            minute: x.minute ?? null, // "57'" / "45'+2'" / "HT" — jen u live
           }
         })
         callback(results)

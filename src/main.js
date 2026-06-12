@@ -59,13 +59,18 @@ if (!getPlayerName()) {
 import { initResultsSync } from './services/matchStore.js'
 initResultsSync()
 
+// Live trigger syncu: během zápasu si appka řekne serveru o čerstvé skóre
+// sama (Wedos cron jede jen 1× za hodinu). Server throttluje na 240 s.
+import { initLiveSync } from './services/liveSync.js'
+initLiveSync()
+
 // Rozpis (časy + týmy po losování KO) zatím pořád z API na klientovi.
 import { fetchSchedule } from './services/resultService.js'
 fetchSchedule().catch(() => {})
 
 // Build marker — změna tohoto řetězce vynutí nový hash v názvu bundlu
 // (řeší občasnou corruptnutou cache entry v ATS edge cachi).
-console.log('[tipovacka] build 2026-04-11-d defer-loads')
+console.log('[tipovacka] build 2026-06-12-b live-minute')
 
 // PWA: registrace service workeru + výzva k instalaci na plochu.
 import { initPWA } from './services/pwa.js'

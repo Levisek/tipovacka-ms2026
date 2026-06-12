@@ -23,7 +23,11 @@ export function renderMatchCard(match, options = {}) {
   if (hasResult && !isLive) {
     statusBadge = '<span class="badge badge-finished">Hotovo</span>'
   } else if (isLive) {
-    statusBadge = '<span class="badge badge-live">Živě</span>'
+    // minute: "57'" / "45'+2'" / "HT" (poločasová pauza) — plní sync server
+    const liveLabel = match.minute === 'HT'
+      ? 'Poločas'
+      : 'Živě' + (match.minute ? ` ${match.minute}` : '')
+    statusBadge = `<span class="badge badge-live">${liveLabel}</span>`
   } else if (pastDeadline) {
     statusBadge = '<span class="badge badge-locked">Uzavřeno</span>'
   } else {

@@ -9,7 +9,7 @@ import { subscribeResults, writeResult } from './resultsFirestore.js'
 
 // Klonuj výchozí data
 const matchMap = new Map()
-MATCHES.forEach(m => matchMap.set(m.id, { ...m, homeScore: null, awayScore: null, status: 'scheduled' }))
+MATCHES.forEach(m => matchMap.set(m.id, { ...m, homeScore: null, awayScore: null, status: 'scheduled', minute: null }))
 
 // Načti uložené výsledky z localStorage
 const STORAGE_KEY = STORAGE_KEYS.RESULTS
@@ -93,10 +93,12 @@ function applyResults(results) {
   for (const [id, r] of Object.entries(results)) {
     const match = matchMap.get(id)
     if (!match) continue
-    if (match.homeScore !== r.homeScore || match.awayScore !== r.awayScore || match.status !== r.status) {
+    const minute = r.minute ?? null
+    if (match.homeScore !== r.homeScore || match.awayScore !== r.awayScore || match.status !== r.status || match.minute !== minute) {
       match.homeScore = r.homeScore
       match.awayScore = r.awayScore
       match.status = r.status
+      match.minute = minute
       changed = true
     }
   }
@@ -189,7 +191,7 @@ function persist() {
   const data = {}
   for (const [id, m] of matchMap) {
     if (m.homeScore !== null) {
-      data[id] = { homeScore: m.homeScore, awayScore: m.awayScore, status: m.status }
+      data[id] = { homeScore: m.homeScore, awayScore: m.awayScore, status: m.status, minute: m.minute ?? null }
     }
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
